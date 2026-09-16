@@ -83,32 +83,32 @@ export const AuditLogsView: React.FC<AuditLogsViewProps> = ({ onSelectWorkOrder 
   const getActionBadgeClass = (action: string) => {
     switch (action) {
       case 'TRANSITION':
-        return 'bg-cyan-950/80 text-cyan-400 border-cyan-800/60';
+        return 'bg-blue-50 text-blue-700 border-blue-200';
       case 'ASSIGNMENT':
-        return 'bg-purple-950/80 text-purple-300 border-purple-800/60';
+        return 'bg-indigo-50 text-indigo-700 border-indigo-200';
       case 'TIME_LOGGED':
-        return 'bg-amber-950/80 text-amber-300 border-amber-800/60';
+        return 'bg-amber-50 text-amber-700 border-amber-200';
       case 'PART_ALLOCATED':
-        return 'bg-emerald-950/80 text-emerald-300 border-emerald-800/60';
+        return 'bg-emerald-50 text-emerald-700 border-emerald-200';
       case 'COMMENT_ADDED':
-        return 'bg-blue-950/80 text-blue-300 border-blue-800/60';
+        return 'bg-sky-50 text-sky-700 border-sky-200';
       case 'ATTACHMENT_UPLOADED':
-        return 'bg-indigo-950/80 text-indigo-300 border-indigo-800/60';
+        return 'bg-purple-50 text-purple-700 border-purple-200';
       default:
-        return 'bg-slate-800 text-slate-300 border-slate-700';
+        return 'bg-slate-100 text-slate-700 border-slate-200';
     }
   };
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
         <div>
-          <h1 className="text-xl font-bold text-white flex items-center gap-2.5">
-            <Shield className="w-6 h-6 text-cyan-400" />
+          <h1 className="text-xl font-bold text-slate-900 flex items-center gap-2.5">
+            <Shield className="w-6 h-6 text-blue-600" />
             <span>Centralized Audit Logs & Compliance Trail</span>
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Immutable operational records across all work orders, lifecycle state transitions, assignments, and billing activities.
           </p>
         </div>
@@ -117,17 +117,17 @@ export const AuditLogsView: React.FC<AuditLogsViewProps> = ({ onSelectWorkOrder 
           <button
             onClick={fetchLogs}
             disabled={loading}
-            className="p-2 rounded-lg border border-slate-800 bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800 transition disabled:opacity-50"
+            className="p-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 shadow-2xs transition disabled:opacity-50 cursor-pointer"
             title="Refresh logs"
           >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-cyan-400' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-blue-600' : ''}`} />
           </button>
           <button
             onClick={handleExportCsv}
             disabled={logs.length === 0}
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg border border-cyan-800/60 bg-cyan-950/60 text-cyan-300 hover:bg-cyan-900/60 text-xs font-semibold transition disabled:opacity-40"
+            className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-xs transition disabled:opacity-40 cursor-pointer"
           >
-            <Download className="w-3.5 h-3.5 text-cyan-400" />
+            <Download className="w-3.5 h-3.5 text-blue-600" />
             <span>Export Audit CSV</span>
           </button>
         </div>
@@ -135,45 +135,45 @@ export const AuditLogsView: React.FC<AuditLogsViewProps> = ({ onSelectWorkOrder 
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-400 mb-1">
+        <div className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between shadow-2xs">
+          <div className="flex items-center justify-between text-slate-500 mb-1">
             <span className="text-xs font-medium uppercase tracking-wider">Total Audit Records</span>
-            <History className="w-4 h-4 text-cyan-400" />
+            <History className="w-4 h-4 text-blue-600" />
           </div>
-          <div className="text-2xl font-extrabold text-white font-mono">{totalEvents}</div>
-          <div className="text-[11px] text-slate-400 mt-1">Fully indexed immutable events</div>
+          <div className="text-2xl font-extrabold text-slate-900 font-mono">{totalEvents}</div>
+          <div className="text-[11px] text-slate-500 mt-1">Fully indexed immutable events</div>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-400 mb-1">
+        <div className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between shadow-2xs">
+          <div className="flex items-center justify-between text-slate-500 mb-1">
             <span className="text-xs font-medium uppercase tracking-wider">State Transitions</span>
-            <Activity className="w-4 h-4 text-emerald-400" />
+            <Activity className="w-4 h-4 text-emerald-600" />
           </div>
-          <div className="text-2xl font-extrabold text-emerald-400 font-mono">{transitionEvents}</div>
-          <div className="text-[11px] text-slate-400 mt-1">Lifecycle milestone changes</div>
+          <div className="text-2xl font-extrabold text-emerald-600 font-mono">{transitionEvents}</div>
+          <div className="text-[11px] text-slate-500 mt-1">Lifecycle milestone changes</div>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-400 mb-1">
+        <div className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between shadow-2xs">
+          <div className="flex items-center justify-between text-slate-500 mb-1">
             <span className="text-xs font-medium uppercase tracking-wider">Field Assignments</span>
-            <User className="w-4 h-4 text-purple-400" />
+            <User className="w-4 h-4 text-indigo-600" />
           </div>
-          <div className="text-2xl font-extrabold text-purple-300 font-mono">{assignmentEvents}</div>
-          <div className="text-[11px] text-slate-400 mt-1">Technician dispatch actions</div>
+          <div className="text-2xl font-extrabold text-indigo-700 font-mono">{assignmentEvents}</div>
+          <div className="text-[11px] text-slate-500 mt-1">Technician dispatch actions</div>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-400 mb-1">
+        <div className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between shadow-2xs">
+          <div className="flex items-center justify-between text-slate-500 mb-1">
             <span className="text-xs font-medium uppercase tracking-wider">Financial & Stock Logs</span>
-            <CheckCircle2 className="w-4 h-4 text-amber-400" />
+            <CheckCircle2 className="w-4 h-4 text-amber-500" />
           </div>
-          <div className="text-2xl font-extrabold text-amber-400 font-mono">{financialEvents}</div>
-          <div className="text-[11px] text-slate-400 mt-1">Time entries & part allocations</div>
+          <div className="text-2xl font-extrabold text-amber-600 font-mono">{financialEvents}</div>
+          <div className="text-[11px] text-slate-500 mt-1">Time entries & part allocations</div>
         </div>
       </div>
 
       {/* Filters & Search */}
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col sm:flex-row gap-3 items-center justify-between">
+      <div className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col sm:flex-row gap-3 items-center justify-between shadow-2xs">
         <div className="relative w-full sm:w-80">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
           <input
@@ -181,18 +181,18 @@ export const AuditLogsView: React.FC<AuditLogsViewProps> = ({ onSelectWorkOrder 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by order #, actor, action, or notes..."
-            className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-9 pr-3 py-1.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+            className="w-full bg-slate-50 border border-slate-200 rounded-lg pl-9 pr-3 py-1.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
           />
         </div>
 
         <div className="flex items-center gap-3 w-full sm:w-auto">
           {/* Action Filter */}
-          <div className="flex items-center gap-1.5 text-xs text-slate-400">
-            <Filter className="w-3.5 h-3.5" />
+          <div className="flex items-center gap-1.5 text-xs text-slate-600">
+            <Filter className="w-3.5 h-3.5 text-slate-400" />
             <select
               value={selectedAction}
               onChange={(e) => setSelectedAction(e.target.value)}
-              className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500"
+              className="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 cursor-pointer"
             >
               <option value="ALL">All Actions</option>
               <option value="TRANSITION">Transitions</option>
@@ -205,11 +205,11 @@ export const AuditLogsView: React.FC<AuditLogsViewProps> = ({ onSelectWorkOrder 
           </div>
 
           {/* Role Filter */}
-          <div className="flex items-center gap-1.5 text-xs text-slate-400">
+          <div className="flex items-center gap-1.5 text-xs text-slate-600">
             <select
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
-              className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500"
+              className="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 cursor-pointer"
             >
               <option value="ALL">All Roles</option>
               <option value="SUPER_ADMIN">Super Admin</option>
@@ -224,17 +224,17 @@ export const AuditLogsView: React.FC<AuditLogsViewProps> = ({ onSelectWorkOrder 
 
       {/* Error Banner */}
       {error && (
-        <div className="p-4 bg-rose-950/40 border border-rose-800 text-rose-300 text-xs rounded-xl flex items-center gap-2">
+        <div className="p-4 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-xl flex items-center gap-2">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
       {/* Audit Logs Table */}
-      <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
+      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-950 text-slate-400 uppercase text-[10px] font-semibold border-b border-slate-800">
+            <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] font-semibold border-b border-slate-200">
               <tr>
                 <th className="px-4 py-3">Timestamp</th>
                 <th className="px-4 py-3">Work Order</th>
@@ -243,12 +243,12 @@ export const AuditLogsView: React.FC<AuditLogsViewProps> = ({ onSelectWorkOrder 
                 <th className="px-4 py-3">Event Details & State Changes</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/80 text-slate-300">
+            <tbody className="divide-y divide-slate-100 text-slate-700">
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="px-4 py-12 text-center text-slate-400">
+                  <td colSpan={5} className="px-4 py-12 text-center text-slate-500">
                     <div className="flex flex-col items-center justify-center gap-2">
-                      <RefreshCw className="w-6 h-6 animate-spin text-cyan-400" />
+                      <RefreshCw className="w-6 h-6 animate-spin text-blue-600" />
                       <span className="text-xs font-mono uppercase tracking-wider">Loading Audit Trail...</span>
                     </div>
                   </td>
@@ -256,18 +256,18 @@ export const AuditLogsView: React.FC<AuditLogsViewProps> = ({ onSelectWorkOrder 
               ) : paginatedLogs.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-4 py-12 text-center text-slate-500">
-                    <ShieldAlert className="w-8 h-8 text-slate-600 mx-auto mb-2" />
-                    <p className="font-semibold text-slate-300">No audit records found matching your filters</p>
+                    <ShieldAlert className="w-8 h-8 text-slate-400 mx-auto mb-2" />
+                    <p className="font-semibold text-slate-800">No audit records found matching your filters</p>
                     <p className="text-[11px] text-slate-500 mt-0.5">Try resetting search query or selecting All Actions.</p>
                   </td>
                 </tr>
               ) : (
                 paginatedLogs.map((log, idx) => (
-                  <tr key={log.id || `audit-${idx}`} className="hover:bg-slate-800/40 transition">
+                  <tr key={log.id || `audit-${idx}`} className="hover:bg-slate-50/70 transition">
                     {/* Timestamp */}
-                    <td className="px-4 py-3 whitespace-nowrap text-[11px] font-mono text-slate-400">
-                      <div className="text-slate-200">{new Date(log.timestamp).toLocaleDateString()}</div>
-                      <div className="text-[10px] text-slate-500 flex items-center gap-1">
+                    <td className="px-4 py-3 whitespace-nowrap text-[11px] font-mono text-slate-500">
+                      <div className="text-slate-800 font-semibold">{new Date(log.timestamp).toLocaleDateString()}</div>
+                      <div className="text-[10px] text-slate-400 flex items-center gap-1">
                         <Clock className="w-2.5 h-2.5" />
                         <span>{new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
                       </div>
@@ -279,18 +279,18 @@ export const AuditLogsView: React.FC<AuditLogsViewProps> = ({ onSelectWorkOrder 
                         <button
                           type="button"
                           onClick={() => onSelectWorkOrder && onSelectWorkOrder(log.workOrderId)}
-                          className="group flex flex-col text-left hover:opacity-80 transition"
+                          className="group flex flex-col text-left hover:opacity-80 transition cursor-pointer"
                         >
-                          <span className="font-mono font-bold text-cyan-400 text-xs flex items-center gap-1 group-hover:underline">
+                          <span className="font-mono font-bold text-blue-600 text-xs flex items-center gap-1 group-hover:underline">
                             {log.workOrderNumber || 'WO-#'}
                             <ExternalLink className="w-2.5 h-2.5 opacity-0 group-hover:opacity-100 transition" />
                           </span>
-                          <span className="text-[11px] text-slate-400 truncate max-w-[180px]">
+                          <span className="text-[11px] text-slate-500 truncate max-w-[180px]">
                             {log.workOrderTitle}
                           </span>
                         </button>
                       ) : (
-                        <span className="text-slate-500 font-mono">System</span>
+                        <span className="text-slate-400 font-mono">System</span>
                       )}
                     </td>
 
@@ -303,22 +303,22 @@ export const AuditLogsView: React.FC<AuditLogsViewProps> = ({ onSelectWorkOrder 
 
                     {/* Actor */}
                     <td className="px-4 py-3 whitespace-nowrap">
-                      <div className="font-semibold text-white">{log.actorName || 'System Service'}</div>
-                      <div className="text-[10px] text-slate-400 font-mono">{log.actorRole || 'SYSTEM'}</div>
+                      <div className="font-semibold text-slate-900">{log.actorName || 'System Service'}</div>
+                      <div className="text-[10px] text-slate-500 font-mono">{log.actorRole || 'SYSTEM'}</div>
                     </td>
 
                     {/* Details */}
                     <td className="px-4 py-3">
-                      <div className="text-slate-300 text-xs">
+                      <div className="text-slate-700 text-xs">
                         {log.details || log.notes || 'System lifecycle record updated.'}
                       </div>
                       {(log.fromStatus || log.toStatus) && (
                         <div className="mt-1 flex items-center gap-1.5 text-[10px] font-mono">
-                          <span className="px-1.5 py-0.5 rounded bg-slate-950 border border-slate-800 text-slate-400">
+                          <span className="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 text-slate-600">
                             {log.fromStatus || 'INIT'}
                           </span>
-                          <ArrowRight className="w-3 h-3 text-cyan-400" />
-                          <span className="px-1.5 py-0.5 rounded bg-cyan-950/80 border border-cyan-800 text-cyan-300 font-bold">
+                          <ArrowRight className="w-3 h-3 text-blue-600" />
+                          <span className="px-1.5 py-0.5 rounded bg-blue-50 border border-blue-200 text-blue-700 font-bold">
                             {log.toStatus}
                           </span>
                         </div>
@@ -333,7 +333,7 @@ export const AuditLogsView: React.FC<AuditLogsViewProps> = ({ onSelectWorkOrder 
 
         {/* Pagination Footer */}
         {logs.length > pageSize && (
-          <div className="px-4 py-3 bg-slate-950 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+          <div className="px-4 py-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
             <span>
               Showing {(currentPage - 1) * pageSize + 1} to {Math.min(currentPage * pageSize, logs.length)} of {logs.length} records
             </span>
@@ -341,17 +341,17 @@ export const AuditLogsView: React.FC<AuditLogsViewProps> = ({ onSelectWorkOrder 
               <button
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-slate-300 disabled:opacity-40 hover:bg-slate-800"
+                className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 disabled:opacity-40 hover:bg-slate-50 cursor-pointer shadow-2xs"
               >
                 Previous
               </button>
-              <span className="px-2 font-mono text-slate-300">
+              <span className="px-2 font-mono text-slate-700 font-semibold">
                 {currentPage} / {totalPages}
               </span>
               <button
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
-                className="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-slate-300 disabled:opacity-40 hover:bg-slate-800"
+                className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 disabled:opacity-40 hover:bg-slate-50 cursor-pointer shadow-2xs"
               >
                 Next
               </button>

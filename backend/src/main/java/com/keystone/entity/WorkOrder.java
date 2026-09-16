@@ -106,10 +106,19 @@ public class WorkOrder {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    @Column(name = "customer_id")
+    private UUID customerId;
+
     @com.fasterxml.jackson.annotation.JsonIgnore
     @OneToMany(mappedBy = "workOrder", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
     private java.util.List<Assignment> assignments = new java.util.ArrayList<>();
+
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    @OneToMany(mappedBy = "workOrder", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OrderBy("timestamp ASC")
+    @Builder.Default
+    private java.util.List<WorkOrderStatusHistory> statusHistory = new java.util.ArrayList<>();
 
     @com.fasterxml.jackson.annotation.JsonIgnore
     @OneToMany(mappedBy = "workOrder", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -37,6 +37,7 @@ public class WorkOrderService {
     private final AssignmentRepository assignmentRepository;
     private final AuditLogRepository auditLogRepository;
     private final UserRepository userRepository;
+    private final WorkOrderStatusHistoryRepository workOrderStatusHistoryRepository;
 
     @Transactional(readOnly = true)
     public Page<WorkOrderResponseDto> getWorkOrders(
@@ -167,6 +168,22 @@ public class WorkOrderService {
 
         wo = workOrderRepository.save(wo);
 
+        User currentUser = currentUserId != null ? userRepository.findById(currentUserId).orElse(null) : null;
+        String currentUserName = currentUser != null ? (currentUser.getFirstName() + " " + currentUser.getLastName()).trim() : "System";
+        String currentUserRole = userRoles != null && !userRoles.isEmpty() ? userRoles.iterator().next().name() : "SYSTEM";
+
+        WorkOrderStatusHistory history = WorkOrderStatusHistory.builder()
+                .workOrder(wo)
+                .previousStatus(currentState)
+                .newStatus(targetState)
+                .changedByUser(currentUser)
+                .changedByName(currentUserName)
+                .changedByRole(currentUserRole)
+                .timestamp(now)
+                .note(request.getReason() != null ? request.getReason() : (request.getResolutionNotes() != null ? request.getResolutionNotes() : null))
+                .build();
+        workOrderStatusHistoryRepository.save(history);
+
         recordAudit(wo.getOrganizationId(), wo.getId(), AuditAction.STATUS_TRANSITION, currentUserId,
                 "State changed from " + currentState + " to " + targetState + (request.getReason() != null ? " Reason: " + request.getReason() : ""));
 
@@ -249,6 +266,24 @@ public class WorkOrderService {
 
         Set<WorkOrderStatus> permittedNextStates = stateMachine.getAvailableTransitions(wo.getStatus());
 
+        java.util.List<WorkOrderStatusHistoryDto> historyDtos = null;
+        if (wo.getId() != null) {
+            historyDtos = workOrderStatusHistoryRepository.findByWorkOrderIdOrderByTimestampAsc(wo.getId())
+                    .stream()
+                    .map(h -> WorkOrderStatusHistoryDto.builder()
+                            .id(h.getId())
+                            .workOrderId(wo.getId())
+                            .previousStatus(h.getPreviousStatus())
+                            .newStatus(h.getNewStatus())
+                            .changedByUserId(h.getChangedByUser() != null ? h.getChangedByUser().getId() : null)
+                            .changedByName(h.getChangedByName())
+                            .changedByRole(h.getChangedByRole())
+                            .timestamp(h.getTimestamp())
+                            .note(h.getNote())
+                            .build())
+                    .toList();
+        }
+
         return WorkOrderResponseDto.builder()
                 .id(wo.getId())
                 .workOrderNumber(wo.getWorkOrderNumber())
@@ -259,6 +294,7 @@ public class WorkOrderService {
                 .category(wo.getCategory())
                 .facilityId(wo.getFacilityId())
                 .facilityName(facilityName)
+                .customerId(wo.getCustomerId())
                 .assetId(wo.getAssetId())
                 .assetName(assetName)
                 .assignedTechnicianId(wo.getAssignedTechnicianId())
@@ -274,6 +310,7 @@ public class WorkOrderService {
                 .closedAt(wo.getClosedAt())
                 .resolutionNotes(wo.getResolutionNotes())
                 .permittedNextStates(permittedNextStates)
+                .statusHistory(historyDtos)
                 .createdAt(wo.getCreatedAt())
                 .updatedAt(wo.getUpdatedAt())
                 .build();

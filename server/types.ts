@@ -7,14 +7,24 @@ export type RoleName =
 
 export type WorkOrderStatus = 
   | 'NEW' 
-  | 'TRIAGED' 
   | 'ASSIGNED' 
-  | 'ACCEPTED' 
   | 'IN_PROGRESS' 
   | 'ON_HOLD' 
   | 'COMPLETED' 
-  | 'VERIFIED' 
-  | 'CLOSED';
+  | 'CLOSED'
+  | 'CANCELLED';
+
+export interface WorkOrderStatusHistoryRecord {
+  id: string;
+  workOrderId: string;
+  previousStatus: WorkOrderStatus;
+  newStatus: WorkOrderStatus;
+  changedByUserId?: string;
+  changedByName: string;
+  changedByRole: string;
+  timestamp: string;
+  note?: string;
+}
 
 export type Priority = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
 

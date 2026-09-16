@@ -290,10 +290,10 @@ const MainApplication: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-slate-400">
-        <RefreshCw className="w-8 h-8 animate-spin text-cyan-500 mb-3" />
-        <span className="text-xs font-mono tracking-wider uppercase text-slate-300">
-          Initializing KEYSTONE Security Layer...
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center text-slate-500">
+        <RefreshCw className="w-8 h-8 animate-spin text-blue-600 mb-3" />
+        <span className="text-xs font-mono tracking-wider uppercase text-slate-600 font-semibold">
+          Initializing Enterprise System...
         </span>
       </div>
     );
@@ -304,7 +304,7 @@ const MainApplication: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col antialiased">
       <Navbar
         activeTab={activeTab}
         setActiveTab={handleTabChange}
@@ -525,29 +525,31 @@ const MainApplication: React.FC = () => {
 
       {/* Create Work Order Modal */}
       {isCreateModalOpen && (
-        <div id="create-work-order-modal" className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-6 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <PlusCircle className="w-4 h-4 text-cyan-400" />
+        <div id="create-work-order-modal" className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150">
+          <div className="w-full max-w-lg bg-white border border-slate-200 rounded-2xl shadow-2xl p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <div className="w-6 h-6 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center">
+                  <PlusCircle className="w-4 h-4" />
+                </div>
                 Originate New Work Order
               </h3>
               <button
                 onClick={() => setIsCreateModalOpen(false)}
-                className="text-slate-400 hover:text-white text-xs"
+                className="w-7 h-7 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center text-xs transition"
               >
                 ✕
               </button>
             </div>
 
-            <form onSubmit={handleCreateOrderSubmit} className="space-y-3">
+            <form onSubmit={handleCreateOrderSubmit} className="space-y-3.5">
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Target Facility</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Target Facility</label>
                 <select
                   id="select-wo-facility"
                   value={newFacilityId}
                   onChange={(e) => setNewFacilityId(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                  className="w-full bg-slate-50 border border-slate-200 hover:border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition"
                 >
                   {facilities.map(f => (
                     <option key={f.id} value={f.id}>{f.name} ({f.code})</option>
@@ -556,7 +558,7 @@ const MainApplication: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Title / Issue Summary</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Title / Issue Summary</label>
                 <input
                   id="input-wo-title"
                   type="text"
@@ -564,12 +566,12 @@ const MainApplication: React.FC = () => {
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
                   placeholder="e.g. Critical Chiller 1 Water Pressure Fault"
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                  className="w-full bg-slate-50 border border-slate-200 hover:border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Work Description</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Work Description</label>
                 <textarea
                   id="input-wo-description"
                   required
@@ -577,18 +579,18 @@ const MainApplication: React.FC = () => {
                   value={newDescription}
                   onChange={(e) => setNewDescription(e.target.value)}
                   placeholder="Provide detailed diagnostic info and safety requirements..."
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                  className="w-full bg-slate-50 border border-slate-200 hover:border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white transition"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Priority</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Priority</label>
                   <select
                     id="select-wo-priority"
                     value={newPriority}
                     onChange={(e) => setNewPriority(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                    className="w-full bg-slate-50 border border-slate-200 hover:border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition"
                   >
                     <option value="CRITICAL">CRITICAL (1h SLA)</option>
                     <option value="HIGH">HIGH (4h SLA)</option>
@@ -597,12 +599,12 @@ const MainApplication: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Initial Technician</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Initial Technician</label>
                   <select
                     id="select-wo-tech"
                     value={newTechId}
                     onChange={(e) => setNewTechId(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                    className="w-full bg-slate-50 border border-slate-200 hover:border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition"
                   >
                     <option value="">Unassigned (Status: NEW)</option>
                     {technicians.map(t => (
@@ -612,11 +614,11 @@ const MainApplication: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-2">
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setIsCreateModalOpen(false)}
-                  className="px-3 py-1.5 text-xs text-slate-400 hover:text-white"
+                  className="px-3.5 py-2 text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition"
                 >
                   Cancel
                 </button>
@@ -624,7 +626,7 @@ const MainApplication: React.FC = () => {
                   id="btn-submit-create-wo"
                   type="submit"
                   disabled={isSubmittingOrder}
-                  className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow"
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-xs transition"
                 >
                   {isSubmittingOrder ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <PlusCircle className="w-3.5 h-3.5" />}
                   Create & Issue Order

@@ -533,30 +533,30 @@ export const TimeTrackingView: React.FC<TimeTrackingViewProps> = ({
 
       {/* STOP TIMER MODAL */}
       {stoppingTimer && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-6 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <Square className="w-4 h-4 text-rose-400" />
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-white border border-slate-200 rounded-2xl shadow-xl p-6 space-y-4 text-slate-900">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <Square className="w-4 h-4 text-rose-600" />
                 Stop Live Job Timer
               </h3>
               <button
                 onClick={() => setStoppingTimer(null)}
-                className="text-slate-400 hover:text-white text-xs"
+                className="text-slate-400 hover:text-slate-700 text-xs cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs space-y-1">
-              <div className="font-bold text-white">Technician: {stoppingTimer.technicianName}</div>
-              <div className="text-slate-400">Work Order: <span className="font-mono text-cyan-400">{stoppingTimer.workOrderId}</span></div>
-              <div className="text-slate-400">Started: <span className="text-slate-300 font-mono">{new Date(stoppingTimer.startTime).toLocaleTimeString()}</span></div>
+            <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs space-y-1">
+              <div className="font-bold text-slate-900">Technician: {stoppingTimer.technicianName}</div>
+              <div className="text-slate-500">Work Order: <span className="font-mono text-blue-600 font-semibold">{stoppingTimer.workOrderId}</span></div>
+              <div className="text-slate-500">Started: <span className="text-slate-700 font-mono">{new Date(stoppingTimer.startTime).toLocaleTimeString()}</span></div>
             </div>
 
             <form onSubmit={handleStopTimerSubmit} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
                   Session Completion Notes / Tasks Performed
                 </label>
                 <textarea
@@ -564,22 +564,22 @@ export const TimeTrackingView: React.FC<TimeTrackingViewProps> = ({
                   value={stopNotes}
                   onChange={(e) => setStopNotes(e.target.value)}
                   placeholder="Completed system calibration, replaced filter assembly..."
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-2">
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setStoppingTimer(null)}
-                  className="px-3 py-1.5 text-xs text-slate-400 hover:text-white"
+                  className="px-3 py-1.5 text-xs text-slate-500 hover:text-slate-800 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmittingStop}
-                  className="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow"
+                  className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer"
                 >
                   {isSubmittingStop ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Square className="w-3.5 h-3.5 fill-current" />}
                   Stop & Record Labor
@@ -592,36 +592,36 @@ export const TimeTrackingView: React.FC<TimeTrackingViewProps> = ({
 
       {/* MANUAL TIME ENTRY MODAL */}
       {showManualModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-6 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <Clock className="w-4 h-4 text-cyan-400" />
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="w-full max-w-lg bg-white border border-slate-200 rounded-2xl shadow-xl p-6 space-y-4 text-slate-900">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <Clock className="w-4 h-4 text-blue-600" />
                 Record Manual Time Entry
               </h3>
               <button
                 onClick={() => setShowManualModal(false)}
-                className="text-slate-400 hover:text-white text-xs"
+                className="text-slate-400 hover:text-slate-700 text-xs cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
             {manualError && (
-              <div className="p-3 bg-rose-950/40 border border-rose-800 text-rose-300 text-xs rounded-lg flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+              <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-lg flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
                 <span>{manualError}</span>
               </div>
             )}
 
             <form onSubmit={handleManualEntrySubmit} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Target Work Order</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Target Work Order</label>
                 <select
                   required
                   value={manualOrderId}
                   onChange={(e) => setManualOrderId(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 cursor-pointer"
                 >
                   {workOrders.map(w => (
                     <option key={w.id} value={w.id}>
@@ -633,12 +633,12 @@ export const TimeTrackingView: React.FC<TimeTrackingViewProps> = ({
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Technician</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Technician</label>
                   <select
                     required
                     value={manualTechId}
                     onChange={(e) => setManualTechId(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 cursor-pointer"
                   >
                     {technicians.map(t => (
                       <option key={t.id} value={t.id}>{t.name}</option>
@@ -647,11 +647,11 @@ export const TimeTrackingView: React.FC<TimeTrackingViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Activity Type</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Activity Type</label>
                   <select
                     value={manualEntryType}
                     onChange={(e) => setManualEntryType(e.target.value as any)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 cursor-pointer"
                   >
                     <option value="LABOR">Direct Labor</option>
                     <option value="DIAGNOSIS">Diagnostics / Inspection</option>
@@ -663,7 +663,7 @@ export const TimeTrackingView: React.FC<TimeTrackingViewProps> = ({
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Duration (Minutes)</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Duration (Minutes)</label>
                   <input
                     type="number"
                     min={5}
@@ -671,7 +671,7 @@ export const TimeTrackingView: React.FC<TimeTrackingViewProps> = ({
                     required
                     value={manualDurationMinutes}
                     onChange={(e) => setManualDurationMinutes(Number(e.target.value))}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500 font-mono"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-mono"
                   />
                   <span className="text-[10px] text-slate-500 mt-0.5 block">
                     ={(manualDurationMinutes / 60).toFixed(2)} hours
@@ -679,13 +679,13 @@ export const TimeTrackingView: React.FC<TimeTrackingViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Hourly Rate ($)</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Hourly Rate ($)</label>
                   <input
                     type="number"
                     min={0}
                     value={manualHourlyRate}
                     onChange={(e) => setManualHourlyRate(Number(e.target.value))}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500 font-mono"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-mono"
                   />
                   <span className="text-[10px] text-slate-500 mt-0.5 block">
                     Calculated labor cost: ${((manualDurationMinutes / 60) * manualHourlyRate).toFixed(2)}
@@ -693,43 +693,43 @@ export const TimeTrackingView: React.FC<TimeTrackingViewProps> = ({
                 </div>
               </div>
 
-              <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 flex items-center justify-between">
+              <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 flex items-center justify-between">
                 <div>
-                  <div className="text-xs font-semibold text-slate-200">Billable to Customer</div>
+                  <div className="text-xs font-semibold text-slate-900">Billable to Customer</div>
                   <div className="text-[11px] text-slate-500">Include in final work order invoice rollup</div>
                 </div>
                 <input
                   type="checkbox"
                   checked={manualIsBillable}
                   onChange={(e) => setManualIsBillable(e.target.checked)}
-                  className="w-4 h-4 rounded text-cyan-500 focus:ring-cyan-500 bg-slate-900 border-slate-700"
+                  className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Notes / Description</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Notes / Description</label>
                 <textarea
                   rows={2}
                   required
                   value={manualNotes}
                   onChange={(e) => setManualNotes(e.target.value)}
                   placeholder="Describe maintenance actions taken..."
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-2">
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setShowManualModal(false)}
-                  className="px-3 py-1.5 text-xs text-slate-400 hover:text-white"
+                  className="px-3 py-1.5 text-xs text-slate-500 hover:text-slate-800 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmittingManual}
-                  className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow"
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer"
                 >
                   {isSubmittingManual ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
                   Record Time Entry

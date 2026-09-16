@@ -25,6 +25,8 @@ public class WorkOrderResponseDto {
     private String category;
     private UUID facilityId;
     private String facilityName;
+    private UUID customerId;
+    private String customerName;
     private UUID assetId;
     private String assetName;
     private UUID assignedTechnicianId;
@@ -40,6 +42,7 @@ public class WorkOrderResponseDto {
     private Instant closedAt;
     private String resolutionNotes;
     private Set<WorkOrderStatus> permittedNextStates;
+    private java.util.List<WorkOrderStatusHistoryDto> statusHistory;
     private Instant createdAt;
     private Instant updatedAt;
 }

@@ -227,22 +227,22 @@ export const TechnicianPortal: React.FC = () => {
   return (
     <div id="technician-portal-view" className="space-y-6">
       {/* Mobile-Friendly Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-slate-200 p-6 rounded-2xl shadow-xs text-slate-900">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="px-2.5 py-0.5 rounded text-[10px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/30 font-bold uppercase">
+            <span className="px-2.5 py-0.5 rounded text-[10px] font-mono bg-blue-50 text-blue-700 border border-blue-200 font-bold uppercase">
               FIELD TECHNICIAN WORKBENCH
             </span>
-            <span className="text-xs text-slate-400 font-mono">• Specialist: {user?.firstName} {user?.lastName}</span>
+            <span className="text-xs text-slate-500 font-mono">• Specialist: {user?.firstName} {user?.lastName}</span>
           </div>
-          <h1 className="text-xl font-bold text-white tracking-tight">Mobile Field Execution & Dispatch</h1>
-          <p className="text-xs text-slate-400">Accept jobs, log travel, record labor hours, allocate parts, and capture customer sign-offs.</p>
+          <h1 className="text-xl font-bold text-slate-900 tracking-tight">Mobile Field Execution & Dispatch</h1>
+          <p className="text-xs text-slate-500">Accept jobs, log travel, record labor hours, allocate parts, and capture customer sign-offs.</p>
         </div>
 
         <button
           onClick={fetchData}
           disabled={loading}
-          className="p-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition-colors self-start sm:self-auto cursor-pointer"
+          className="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 rounded-xl transition-colors self-start sm:self-auto cursor-pointer"
           title="Refresh assignments"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -254,52 +254,52 @@ export const TechnicianPortal: React.FC = () => {
          ========================================================================= */}
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
         {/* Today's Assigned Jobs */}
-        <div className="bg-slate-900 border border-slate-800 p-3.5 rounded-xl">
-          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Assigned Jobs</div>
-          <div className="text-xl font-bold text-white mt-1 font-mono">{assignedJobs.length}</div>
-          <div className="text-[10px] text-slate-500 mt-0.5">Total in roster</div>
+        <div className="bg-white border border-slate-200 p-3.5 rounded-xl shadow-2xs">
+          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Assigned Jobs</div>
+          <div className="text-xl font-bold text-slate-900 mt-1 font-mono">{assignedJobs.length}</div>
+          <div className="text-[10px] text-slate-400 mt-0.5">Total in roster</div>
         </div>
 
         {/* Pending Jobs */}
-        <div className="bg-slate-900 border border-slate-800 p-3.5 rounded-xl">
-          <div className="text-[10px] font-bold text-blue-400 uppercase tracking-wider">Pending Jobs</div>
-          <div className="text-xl font-bold text-blue-400 mt-1 font-mono">{pendingJobs.length}</div>
-          <div className="text-[10px] text-slate-500 mt-0.5">Ready to start</div>
+        <div className="bg-white border border-slate-200 p-3.5 rounded-xl shadow-2xs">
+          <div className="text-[10px] font-bold text-blue-600 uppercase tracking-wider">Pending Jobs</div>
+          <div className="text-xl font-bold text-blue-700 mt-1 font-mono">{pendingJobs.length}</div>
+          <div className="text-[10px] text-slate-400 mt-0.5">Ready to start</div>
         </div>
 
         {/* In-Progress Jobs */}
-        <div className="bg-slate-900 border border-slate-800 p-3.5 rounded-xl">
-          <div className="text-[10px] font-bold text-amber-400 uppercase tracking-wider">In-Progress</div>
-          <div className="text-xl font-bold text-amber-400 mt-1 font-mono">{inProgressJobs.length}</div>
-          <div className="text-[10px] text-slate-500 mt-0.5">On site active</div>
+        <div className="bg-white border border-slate-200 p-3.5 rounded-xl shadow-2xs">
+          <div className="text-[10px] font-bold text-amber-600 uppercase tracking-wider">In-Progress</div>
+          <div className="text-xl font-bold text-amber-700 mt-1 font-mono">{inProgressJobs.length}</div>
+          <div className="text-[10px] text-slate-400 mt-0.5">On site active</div>
         </div>
 
         {/* Completed Jobs */}
-        <div className="bg-slate-900 border border-slate-800 p-3.5 rounded-xl">
-          <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Completed</div>
-          <div className="text-xl font-bold text-emerald-400 mt-1 font-mono">{completedJobs.length}</div>
-          <div className="text-[10px] text-slate-500 mt-0.5">Signed & resolved</div>
+        <div className="bg-white border border-slate-200 p-3.5 rounded-xl shadow-2xs">
+          <div className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Completed</div>
+          <div className="text-xl font-bold text-emerald-700 mt-1 font-mono">{completedJobs.length}</div>
+          <div className="text-[10px] text-slate-400 mt-0.5">Signed & resolved</div>
         </div>
 
         {/* Hours Worked Today */}
-        <div className="bg-slate-900 border border-slate-800 p-3.5 rounded-xl">
-          <div className="text-[10px] font-bold text-cyan-400 uppercase tracking-wider">Hours Worked</div>
-          <div className="text-xl font-bold text-cyan-400 mt-1 font-mono">{hoursWorkedToday}h</div>
-          <div className="text-[10px] text-slate-500 mt-0.5">Logged today</div>
+        <div className="bg-white border border-slate-200 p-3.5 rounded-xl shadow-2xs">
+          <div className="text-[10px] font-bold text-cyan-700 uppercase tracking-wider">Hours Worked</div>
+          <div className="text-xl font-bold text-cyan-800 mt-1 font-mono">{hoursWorkedToday}h</div>
+          <div className="text-[10px] text-slate-400 mt-0.5">Logged today</div>
         </div>
 
         {/* Parts Used Today */}
-        <div className="bg-slate-900 border border-slate-800 p-3.5 rounded-xl">
-          <div className="text-[10px] font-bold text-purple-400 uppercase tracking-wider">Parts Used</div>
-          <div className="text-xl font-bold text-purple-400 mt-1 font-mono">{partsUsedToday}</div>
-          <div className="text-[10px] text-slate-500 mt-0.5">Units allocated</div>
+        <div className="bg-white border border-slate-200 p-3.5 rounded-xl shadow-2xs">
+          <div className="text-[10px] font-bold text-purple-600 uppercase tracking-wider">Parts Used</div>
+          <div className="text-xl font-bold text-purple-700 mt-1 font-mono">{partsUsedToday}</div>
+          <div className="text-[10px] text-slate-400 mt-0.5">Units allocated</div>
         </div>
 
         {/* Upcoming Jobs */}
-        <div className="bg-slate-900 border border-slate-800 p-3.5 rounded-xl col-span-2 sm:col-span-2 lg:col-span-1">
-          <div className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider">Upcoming</div>
-          <div className="text-xl font-bold text-indigo-400 mt-1 font-mono">{upcomingJobs.length}</div>
-          <div className="text-[10px] text-slate-500 mt-0.5">Next in queue</div>
+        <div className="bg-white border border-slate-200 p-3.5 rounded-xl shadow-2xs col-span-2 sm:col-span-2 lg:col-span-1">
+          <div className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider">Upcoming</div>
+          <div className="text-xl font-bold text-indigo-700 mt-1 font-mono">{upcomingJobs.length}</div>
+          <div className="text-[10px] text-slate-400 mt-0.5">Next in queue</div>
         </div>
       </div>
 
@@ -307,47 +307,47 @@ export const TechnicianPortal: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         {/* Left Column: Assigned Dispatch Queue (4 cols) */}
-        <div className="lg:col-span-4 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col h-[750px]">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div className="lg:col-span-4 bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col h-[750px]">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div className="flex items-center gap-2">
-              <Wrench className="w-4 h-4 text-amber-400" />
-              <h2 className="text-xs font-bold text-white uppercase tracking-wider">Job Dispatch Queue</h2>
+              <Wrench className="w-4 h-4 text-blue-600" />
+              <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Job Dispatch Queue</h2>
             </div>
-            <span className="px-2 py-0.5 rounded bg-slate-800 text-[10px] font-mono text-slate-300">
+            <span className="px-2 py-0.5 rounded bg-slate-100 text-[10px] font-mono text-slate-600 font-bold">
               {filteredQueue.length} Orders
             </span>
           </div>
 
           {/* Quick Filter Tabs */}
-          <div className="grid grid-cols-4 gap-1 py-3 border-b border-slate-800 text-[10px] font-bold">
+          <div className="grid grid-cols-4 gap-1 py-3 border-b border-slate-100 text-[10px] font-bold">
             <button
               onClick={() => setWorkflowFilter('ALL')}
-              className={`py-1 rounded text-center cursor-pointer transition-colors ${
-                workflowFilter === 'ALL' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'text-slate-400 hover:text-white'
+              className={`py-1.5 rounded-lg text-center cursor-pointer transition-colors ${
+                workflowFilter === 'ALL' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'text-slate-500 hover:text-slate-800'
               }`}
             >
               All ({workOrders.length})
             </button>
             <button
               onClick={() => setWorkflowFilter('PENDING')}
-              className={`py-1 rounded text-center cursor-pointer transition-colors ${
-                workflowFilter === 'PENDING' ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' : 'text-slate-400 hover:text-white'
+              className={`py-1.5 rounded-lg text-center cursor-pointer transition-colors ${
+                workflowFilter === 'PENDING' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'text-slate-500 hover:text-slate-800'
               }`}
             >
               Pending ({pendingJobs.length})
             </button>
             <button
               onClick={() => setWorkflowFilter('IN_PROGRESS')}
-              className={`py-1 rounded text-center cursor-pointer transition-colors ${
-                workflowFilter === 'IN_PROGRESS' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'text-slate-400 hover:text-white'
+              className={`py-1.5 rounded-lg text-center cursor-pointer transition-colors ${
+                workflowFilter === 'IN_PROGRESS' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'text-slate-500 hover:text-slate-800'
               }`}
             >
               Active ({inProgressJobs.length})
             </button>
             <button
               onClick={() => setWorkflowFilter('COMPLETED')}
-              className={`py-1 rounded text-center cursor-pointer transition-colors ${
-                workflowFilter === 'COMPLETED' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'text-slate-400 hover:text-white'
+              className={`py-1.5 rounded-lg text-center cursor-pointer transition-colors ${
+                workflowFilter === 'COMPLETED' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'text-slate-500 hover:text-slate-800'
               }`}
             >
               Done ({completedJobs.length})
@@ -357,7 +357,7 @@ export const TechnicianPortal: React.FC = () => {
           {/* Queue List */}
           <div className="space-y-2.5 overflow-y-auto flex-1 pt-3 pr-1">
             {filteredQueue.length === 0 ? (
-              <div className="py-16 text-center text-slate-500 text-xs">
+              <div className="py-16 text-center text-slate-400 text-xs">
                 No orders match this workflow filter.
               </div>
             ) : (
@@ -371,25 +371,29 @@ export const TechnicianPortal: React.FC = () => {
                     onClick={() => setSelectedOrder(wo)}
                     className={`w-full text-left p-3.5 rounded-xl border transition-all cursor-pointer ${
                       isSelected 
-                        ? 'bg-amber-500/10 border-amber-500/40 shadow-lg shadow-amber-500/5 ring-1 ring-amber-500/30' 
-                        : 'bg-slate-950/70 border-slate-800 hover:border-slate-700'
+                        ? 'bg-blue-50/70 border-blue-400 shadow-xs ring-1 ring-blue-400' 
+                        : 'bg-white border-slate-200 hover:border-slate-300'
                     }`}
                   >
                     <div className="flex items-center justify-between text-xs mb-1">
-                      <span className="font-mono font-bold text-slate-200">{wo.workOrderNumber}</span>
+                      <span className="font-mono font-bold text-slate-900">{wo.workOrderNumber}</span>
                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                        wo.status === 'IN_PROGRESS' ? 'bg-amber-500/20 text-amber-300' :
-                        wo.status === 'COMPLETED' ? 'bg-emerald-500/20 text-emerald-300' :
-                        wo.status === 'ON_HOLD' ? 'bg-rose-500/20 text-rose-300' :
-                        'bg-blue-500/20 text-blue-300'
+                        wo.status === 'IN_PROGRESS' ? 'bg-amber-100 text-amber-800 border border-amber-200' :
+                        wo.status === 'COMPLETED' ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' :
+                        wo.status === 'ON_HOLD' ? 'bg-rose-100 text-rose-800 border border-rose-200' :
+                        'bg-blue-100 text-blue-800 border border-blue-200'
                       }`}>
                         {wo.status}
                       </span>
                     </div>
-                    <h4 className="text-xs font-semibold text-white truncate">{wo.title}</h4>
-                    <div className="flex items-center justify-between text-[11px] text-slate-400 mt-2">
+                    <h4 className="text-xs font-bold text-slate-900 truncate">{wo.title}</h4>
+                    <div className="flex items-center justify-between text-[11px] text-slate-500 mt-2">
                       <span className="truncate">{wo.facilityName}</span>
-                      <span className="text-amber-400/90 font-mono text-[10px] font-bold">{wo.priority}</span>
+                      <span className={`font-mono text-[10px] font-bold ${
+                        wo.priority === 'CRITICAL' ? 'text-rose-600' :
+                        wo.priority === 'HIGH' ? 'text-amber-600' :
+                        'text-blue-600'
+                      }`}>{wo.priority}</span>
                     </div>
                   </button>
                 );
@@ -402,20 +406,20 @@ export const TechnicianPortal: React.FC = () => {
         {selectedOrder ? (
           <div className="lg:col-span-8 space-y-6">
             {/* Active Order Control Card */}
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-5 text-slate-900">
               {/* Header */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
                 <div>
-                  <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
-                    <span className="font-mono text-cyan-400 font-bold">{selectedOrder.workOrderNumber}</span>
+                  <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
+                    <span className="font-mono text-blue-700 font-bold">{selectedOrder.workOrderNumber}</span>
                     <span>•</span>
-                    <span className="flex items-center gap-1"><MapPin className="w-3 h-3 text-slate-500" /> {selectedOrder.facilityName}</span>
+                    <span className="flex items-center gap-1"><MapPin className="w-3 h-3 text-slate-400" /> {selectedOrder.facilityName}</span>
                   </div>
-                  <h2 className="text-base font-bold text-white">{selectedOrder.title}</h2>
+                  <h2 className="text-base font-bold text-slate-900">{selectedOrder.title}</h2>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-slate-400">Current Status:</span>
-                  <span className="px-3 py-1 rounded-lg text-xs font-bold font-mono bg-amber-500/10 border border-amber-500/30 text-amber-300">
+                  <span className="text-xs text-slate-500 font-medium">Status:</span>
+                  <span className="px-3 py-1 rounded-lg text-xs font-bold font-mono bg-blue-50 border border-blue-200 text-blue-700">
                     {selectedOrder.status}
                   </span>
                 </div>
@@ -425,7 +429,7 @@ export const TechnicianPortal: React.FC = () => {
                   TECHNICIAN JOB EXECUTION ACTIONS (Accept, Start Travel, Start Work, Pause, Complete)
                  ========================================================================= */}
               <div>
-                <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-2.5">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-2.5">
                   Technician Action Controls
                 </span>
                 <div className="flex flex-wrap gap-2.5">
@@ -434,7 +438,7 @@ export const TechnicianPortal: React.FC = () => {
                     <button
                       id="btn-tech-accept"
                       onClick={() => handleTransition('ACCEPTED')}
-                      className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow cursor-pointer transition-colors"
+                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer transition-colors"
                     >
                       <Check className="w-4 h-4" />
                       <span>Accept Job Assignment</span>
@@ -446,7 +450,7 @@ export const TechnicianPortal: React.FC = () => {
                     <button
                       id="btn-tech-travel"
                       onClick={handleStartTravel}
-                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow cursor-pointer transition-colors"
+                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer transition-colors"
                     >
                       <Navigation className="w-4 h-4" />
                       <span>Start Travel (En Route)</span>
@@ -458,7 +462,7 @@ export const TechnicianPortal: React.FC = () => {
                     <button
                       id="btn-tech-start-work"
                       onClick={() => handleTransition('IN_PROGRESS')}
-                      className="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow cursor-pointer transition-colors"
+                      className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer transition-colors"
                     >
                       <Play className="w-4 h-4" />
                       <span>Start On-Site Work</span>
@@ -473,7 +477,7 @@ export const TechnicianPortal: React.FC = () => {
                         const reason = prompt('Please specify hold reason (e.g. Waiting on parts, Site inaccessible, Tenant escort required):');
                         if (reason) handleTransition('ON_HOLD', reason);
                       }}
-                      className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 rounded-xl text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors"
+                      className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-amber-700 border border-amber-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors"
                     >
                       <PauseCircle className="w-4 h-4" />
                       <span>Pause Work (Hold)</span>
@@ -488,7 +492,7 @@ export const TechnicianPortal: React.FC = () => {
                         const notes = prompt('Enter repair resolution summary:');
                         handleTransition('COMPLETED', undefined, notes || 'Work marked completed by technician.');
                       }}
-                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow cursor-pointer transition-colors"
+                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer transition-colors"
                     >
                       <CheckCircle2 className="w-4 h-4" />
                       <span>Complete Work</span>
@@ -500,7 +504,7 @@ export const TechnicianPortal: React.FC = () => {
                     <button
                       id="btn-tech-signoff"
                       onClick={() => setShowSignOffModal(true)}
-                      className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow cursor-pointer transition-colors"
+                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer transition-colors"
                     >
                       <FileCheck className="w-4 h-4" />
                       <span>Capture Customer Sign-Off</span>
@@ -510,14 +514,14 @@ export const TechnicianPortal: React.FC = () => {
               </div>
 
               {/* Order Details & Location */}
-              <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 text-xs text-slate-300 leading-relaxed space-y-2">
-                <div className="flex items-center justify-between text-slate-400">
-                  <span className="font-bold text-white">Job Scope & Technical Instructions</span>
-                  <span className="font-mono text-amber-400">SLA Due: {selectedOrder.dueDate ? new Date(selectedOrder.dueDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '24h window'}</span>
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 leading-relaxed space-y-2">
+                <div className="flex items-center justify-between text-slate-500">
+                  <span className="font-bold text-slate-900">Job Scope & Technical Instructions</span>
+                  <span className="font-mono text-blue-700 font-bold">SLA Due: {selectedOrder.dueDate ? new Date(selectedOrder.dueDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '24h window'}</span>
                 </div>
                 <p>{selectedOrder.description}</p>
                 {selectedOrder.holdReason && (
-                  <div className="p-2 rounded bg-amber-500/10 border border-amber-500/20 text-amber-300 font-medium">
+                  <div className="p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 font-medium">
                     ⚠️ Current Hold Reason: {selectedOrder.holdReason}
                   </div>
                 )}
@@ -526,13 +530,13 @@ export const TechnicianPortal: React.FC = () => {
               {/* Grid: Labor Hours & Parts Used */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                 {/* 1. Log Labor Hours Form & List */}
-                <div className="p-4 bg-slate-950/60 border border-slate-800/80 rounded-xl space-y-3">
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5 text-cyan-400" />
+                    <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5 text-blue-600" />
                       Log Labor Hours
                     </span>
-                    <span className="text-[11px] font-mono text-cyan-400">
+                    <span className="text-[11px] font-mono font-bold text-blue-700">
                       Total: {selectedOrder.actualDurationHours}h
                     </span>
                   </div>
@@ -546,14 +550,14 @@ export const TechnicianPortal: React.FC = () => {
                         step={15}
                         value={logTimeMinutes}
                         onChange={(e) => setLogTimeMinutes(Number(e.target.value))}
-                        className="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200"
+                        className="bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                         placeholder="Minutes"
                       />
                       <select
                         id="select-log-type"
                         value={timeType}
                         onChange={(e) => setTimeType(e.target.value as any)}
-                        className="bg-slate-900 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-slate-200"
+                        className="bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 cursor-pointer"
                       >
                         <option value="LABOR">LABOR</option>
                         <option value="DIAGNOSIS">DIAGNOSIS</option>
@@ -568,14 +572,14 @@ export const TechnicianPortal: React.FC = () => {
                       value={timeNotes}
                       onChange={(e) => setTimeNotes(e.target.value)}
                       placeholder="Notes (e.g. Capacitor testing)"
-                      className="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200"
+                      className="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                     />
 
                     <button
                       id="btn-submit-time"
                       type="submit"
                       disabled={submittingTime}
-                      className="w-full py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer disabled:opacity-50"
+                      className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer disabled:opacity-50 shadow-xs"
                     >
                       {submittingTime ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Clock className="w-3.5 h-3.5" />}
                       <span>Log Labor Entry</span>
@@ -586,9 +590,9 @@ export const TechnicianPortal: React.FC = () => {
                   {selectedOrder.timeEntries.length > 0 && (
                     <div className="space-y-1.5 pt-1 max-h-32 overflow-y-auto">
                       {selectedOrder.timeEntries.map(te => (
-                        <div key={te.id} className="p-2 bg-slate-900 border border-slate-800 rounded-lg text-[11px] flex items-center justify-between">
-                          <span>{te.entryType}: {te.durationMinutes}m</span>
-                          <span className="text-slate-400 truncate max-w-[120px]">{te.notes}</span>
+                        <div key={te.id} className="p-2 bg-white border border-slate-200 rounded-lg text-[11px] flex items-center justify-between">
+                          <span className="font-medium text-slate-800">{te.entryType}: {te.durationMinutes}m</span>
+                          <span className="text-slate-500 truncate max-w-[120px]">{te.notes}</span>
                         </div>
                       ))}
                     </div>
@@ -596,13 +600,13 @@ export const TechnicianPortal: React.FC = () => {
                 </div>
 
                 {/* 2. Record Parts Used Form & List */}
-                <div className="p-4 bg-slate-950/60 border border-slate-800/80 rounded-xl space-y-3">
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                      <Package className="w-3.5 h-3.5 text-amber-400" />
+                    <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                      <Package className="w-3.5 h-3.5 text-amber-600" />
                       Record Parts Used
                     </span>
-                    <span className="text-[11px] font-mono text-amber-400">
+                    <span className="text-[11px] font-mono font-bold text-amber-700">
                       {selectedOrder.parts.length} allocated
                     </span>
                   </div>
@@ -612,10 +616,10 @@ export const TechnicianPortal: React.FC = () => {
                       id="select-part-id"
                       value={selectedPartId}
                       onChange={(e) => setSelectedPartId(e.target.value)}
-                      className="w-full bg-slate-900 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-slate-200"
+                      className="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 cursor-pointer"
                     >
                       {parts.map(p => (
-                        <option key={p.id} value={p.id}>{p.name} ({p.partNumber}) - In Stock: {p.stockOnHand}</option>
+                        <option key={p.id} value={p.id}>{p.name} ({p.partNumber}) - Stock: {p.stockOnHand}</option>
                       ))}
                     </select>
 
@@ -626,14 +630,14 @@ export const TechnicianPortal: React.FC = () => {
                         min={1}
                         value={partQuantity}
                         onChange={(e) => setPartQuantity(Number(e.target.value))}
-                        className="w-20 bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200"
+                        className="w-20 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                         placeholder="Qty"
                       />
                       <button
                         id="btn-allocate-part"
                         type="submit"
                         disabled={submittingPart}
-                        className="flex-1 py-1.5 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer disabled:opacity-50"
+                        className="flex-1 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer disabled:opacity-50 shadow-xs"
                       >
                         {submittingPart ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Package className="w-3 h-3" />}
                         <span>Allocate Part</span>
@@ -645,9 +649,9 @@ export const TechnicianPortal: React.FC = () => {
                   {selectedOrder.parts.length > 0 && (
                     <div className="space-y-1.5 pt-1 max-h-32 overflow-y-auto">
                       {selectedOrder.parts.map(p => (
-                        <div key={p.id} className="p-2 bg-slate-900 border border-slate-800 rounded-lg text-[11px] flex items-center justify-between">
-                          <span>{p.partName} &times; {p.quantity}</span>
-                          <span className="text-emerald-400 font-mono">${(p.unitPrice * p.quantity).toFixed(2)}</span>
+                        <div key={p.id} className="p-2 bg-white border border-slate-200 rounded-lg text-[11px] flex items-center justify-between">
+                          <span className="font-medium text-slate-800">{p.partName} &times; {p.quantity}</span>
+                          <span className="text-emerald-700 font-mono font-bold">${(p.unitPrice * p.quantity).toFixed(2)}</span>
                         </div>
                       ))}
                     </div>
@@ -656,11 +660,11 @@ export const TechnicianPortal: React.FC = () => {
               </div>
 
               {/* Grid: Upload Job Photos & Add Work Notes */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-slate-800">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
                 {/* 3. Upload Job Photos & Attachments */}
-                <div className="p-4 bg-slate-950/60 border border-slate-800/80 rounded-xl space-y-3">
-                  <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                    <Camera className="w-3.5 h-3.5 text-emerald-400" />
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+                  <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                    <Camera className="w-3.5 h-3.5 text-emerald-600" />
                     Upload Field Photos & Proof of Work
                   </span>
 
@@ -670,7 +674,7 @@ export const TechnicianPortal: React.FC = () => {
                       value={photoUrl}
                       onChange={(e) => setPhotoUrl(e.target.value)}
                       placeholder="Photo URL (e.g. https://images.unsplash.com/...)"
-                      className="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200"
+                      className="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                     />
                     <div className="flex gap-2">
                       <input
@@ -678,12 +682,12 @@ export const TechnicianPortal: React.FC = () => {
                         value={photoCaption}
                         onChange={(e) => setPhotoCaption(e.target.value)}
                         placeholder="Caption (e.g. Replaced fan motor)"
-                        className="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200"
+                        className="flex-1 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                       />
                       <button
                         type="submit"
                         disabled={submittingPhoto || !photoUrl.trim()}
-                        className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                        className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer disabled:opacity-50 shadow-xs"
                       >
                         {submittingPhoto ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Camera className="w-3 h-3" />}
                         <span>Attach</span>
@@ -695,9 +699,9 @@ export const TechnicianPortal: React.FC = () => {
                   {selectedOrder.attachments && selectedOrder.attachments.length > 0 && (
                     <div className="space-y-1.5 pt-1 max-h-32 overflow-y-auto">
                       {selectedOrder.attachments.map(att => (
-                        <div key={att.id} className="p-2 bg-slate-900 border border-slate-800 rounded-lg text-[11px] flex items-center justify-between">
-                          <span className="text-slate-300 font-medium truncate">{att.caption || att.fileName}</span>
-                          <a href={att.url} target="_blank" rel="noreferrer" className="text-cyan-400 hover:underline text-[10px]">View</a>
+                        <div key={att.id} className="p-2 bg-white border border-slate-200 rounded-lg text-[11px] flex items-center justify-between">
+                          <span className="text-slate-700 font-medium truncate">{att.caption || att.fileName}</span>
+                          <a href={att.url} target="_blank" rel="noreferrer" className="text-blue-600 font-semibold hover:underline text-[10px]">View</a>
                         </div>
                       ))}
                     </div>
@@ -705,9 +709,9 @@ export const TechnicianPortal: React.FC = () => {
                 </div>
 
                 {/* 4. Add Work Notes & Dispatch Communication */}
-                <div className="p-4 bg-slate-950/60 border border-slate-800/80 rounded-xl space-y-3">
-                  <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                    <MessageSquare className="w-3.5 h-3.5 text-indigo-400" />
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+                  <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                    <MessageSquare className="w-3.5 h-3.5 text-blue-600" />
                     Field Notes & Updates
                   </span>
 
@@ -717,12 +721,12 @@ export const TechnicianPortal: React.FC = () => {
                       value={workNote}
                       onChange={(e) => setWorkNote(e.target.value)}
                       placeholder="Add diagnostic notes or update..."
-                      className="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200"
+                      className="flex-1 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                     />
                     <button
                       type="submit"
                       disabled={submittingNote || !workNote.trim()}
-                      className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                      className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer disabled:opacity-50 shadow-xs"
                     >
                       {submittingNote ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
                       <span>Save</span>
@@ -733,12 +737,12 @@ export const TechnicianPortal: React.FC = () => {
                   {selectedOrder.comments && selectedOrder.comments.length > 0 && (
                     <div className="space-y-1.5 pt-1 max-h-32 overflow-y-auto">
                       {selectedOrder.comments.map(c => (
-                        <div key={c.id} className="p-2 bg-slate-900 border border-slate-800 rounded-lg text-[11px]">
-                          <div className="flex items-center justify-between text-[10px] text-slate-400 mb-0.5">
-                            <span className="font-bold text-slate-300">{c.authorName}</span>
+                        <div key={c.id} className="p-2 bg-white border border-slate-200 rounded-lg text-[11px]">
+                          <div className="flex items-center justify-between text-[10px] text-slate-500 mb-0.5">
+                            <span className="font-bold text-slate-800">{c.authorName}</span>
                             <span>{new Date(c.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                           </div>
-                          <p className="text-slate-300">{c.content}</p>
+                          <p className="text-slate-700">{c.content}</p>
                         </div>
                       ))}
                     </div>
@@ -748,7 +752,7 @@ export const TechnicianPortal: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div className="lg:col-span-8 p-16 bg-slate-900 border border-slate-800 rounded-2xl text-center text-slate-500 text-xs">
+          <div className="lg:col-span-8 p-16 bg-white border border-slate-200 rounded-2xl text-center text-slate-400 text-xs shadow-xs">
             Select an order from the queue to start execution.
           </div>
         )}
@@ -756,30 +760,30 @@ export const TechnicianPortal: React.FC = () => {
 
       {/* Modal: Customer Sign-Off Capture */}
       {showSignOffModal && selectedOrder && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-6 space-y-4 text-white">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <FileCheck className="w-4 h-4 text-cyan-400" />
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-white border border-slate-200 rounded-2xl shadow-xl p-6 space-y-4 text-slate-900">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <FileCheck className="w-4 h-4 text-blue-600" />
                 Capture On-Site Customer Sign-Off
               </h3>
               <button
                 onClick={() => setShowSignOffModal(false)}
-                className="text-slate-400 hover:text-white text-xs cursor-pointer"
+                className="text-slate-400 hover:text-slate-700 text-xs p-1 rounded-lg hover:bg-slate-100 cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-xs space-y-1">
-              <div className="font-mono font-bold text-cyan-400">{selectedOrder.workOrderNumber}</div>
-              <div className="font-semibold text-white">{selectedOrder.title}</div>
-              <div className="text-slate-400">{selectedOrder.facilityName}</div>
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-1">
+              <div className="font-mono font-bold text-blue-700">{selectedOrder.workOrderNumber}</div>
+              <div className="font-bold text-slate-900">{selectedOrder.title}</div>
+              <div className="text-slate-500">{selectedOrder.facilityName}</div>
             </div>
 
             <form onSubmit={handleCaptureSignOff} className="space-y-3.5">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-bold text-slate-700 mb-1">
                   Customer Signatory Name *
                 </label>
                 <input
@@ -788,12 +792,12 @@ export const TechnicianPortal: React.FC = () => {
                   value={signOffName}
                   onChange={(e) => setSignOffName(e.target.value)}
                   placeholder="e.g. Sarah Jenkins (Building Manager)"
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-bold text-slate-700 mb-1">
                   Confirmation Signature & Verification Note
                 </label>
                 <textarea
@@ -801,22 +805,22 @@ export const TechnicianPortal: React.FC = () => {
                   value={signOffNotes}
                   onChange={(e) => setSignOffNotes(e.target.value)}
                   placeholder="e.g. Work confirmed complete. Chiller operating at 44°F. Site left orderly."
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setShowSignOffModal(false)}
-                  className="px-3 py-1.5 text-xs text-slate-400 hover:text-white cursor-pointer"
+                  className="px-3.5 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submittingSignOff || !signOffName.trim()}
-                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow cursor-pointer disabled:opacity-50"
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer disabled:opacity-50 transition-colors"
                 >
                   {submittingSignOff ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
                   <span>Confirm Sign-Off & Complete</span>
