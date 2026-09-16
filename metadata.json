@@ -1,0 +1,6 @@
+{
+  "name": "KEYSTONE Field Service Management",
+  "description": "Full-stack commercial facility field service and maintenance operations platform with work orders, dispatch, SLA tracking, parts inventory, and technician scheduling.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
