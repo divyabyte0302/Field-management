@@ -164,7 +164,7 @@ export function assessWorkOrderSla(
   }
 
   // Resolution Status Check
-  const isResolvedOrClosed = ['COMPLETED', 'VERIFIED', 'CLOSED'].includes(order.status);
+  const isResolvedOrClosed = ['COMPLETED', 'CLOSED'].includes(order.status);
   let isResolutionBreached = order.isSlaResolutionBreached;
   let resolutionStatus: SlaStatus = 'ON_TRACK';
 

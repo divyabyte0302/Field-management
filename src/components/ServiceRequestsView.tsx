@@ -744,7 +744,7 @@ export const ServiceRequestsView: React.FC<ServiceRequestsViewProps> = ({
                   onChange={(e) => setConvertTechId(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 cursor-pointer"
                 >
-                  <option value="">Leave Unassigned (Status will be TRIAGED)</option>
+                  <option value="">Leave Unassigned (Status will be NEW)</option>
                   {technicians.map((t) => (
                     <option key={t.id} value={t.id}>
                       {t.name} ({t.status}) &bull; {t.skills.join(', ')}

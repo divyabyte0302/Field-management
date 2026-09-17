@@ -39,14 +39,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   const stages: { key: WorkOrderStatus; label: string; desc: string; color: string }[] = [
     { key: 'NEW', label: '1. New', desc: 'Inbound intake', color: 'bg-slate-50 text-slate-700 border-slate-200' },
-    { key: 'TRIAGED', label: '2. Triaged', desc: 'SLA assessed', color: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
-    { key: 'ASSIGNED', label: '3. Assigned', desc: 'Dispatched to tech', color: 'bg-blue-50 text-blue-700 border-blue-200' },
-    { key: 'ACCEPTED', label: '4. Accepted', desc: 'Tech confirmed', color: 'bg-sky-50 text-sky-700 border-sky-200' },
-    { key: 'IN_PROGRESS', label: '5. In Progress', desc: 'Active on site', color: 'bg-amber-50 text-amber-800 border-amber-300' },
-    { key: 'ON_HOLD', label: '6. On Hold', desc: 'Parts or access', color: 'bg-orange-50 text-orange-800 border-orange-300' },
-    { key: 'COMPLETED', label: '7. Completed', desc: 'Field repair done', color: 'bg-teal-50 text-teal-800 border-teal-300' },
-    { key: 'VERIFIED', label: '8. Verified', desc: 'Client sign-off', color: 'bg-emerald-50 text-emerald-800 border-emerald-300' },
-    { key: 'CLOSED', label: '9. Closed', desc: 'Invoiced & archived', color: 'bg-slate-200 text-slate-800 border-slate-400' },
+    { key: 'ASSIGNED', label: '2. Assigned', desc: 'Dispatched to tech', color: 'bg-blue-50 text-blue-700 border-blue-200' },
+    { key: 'IN_PROGRESS', label: '3. In Progress', desc: 'Active on site', color: 'bg-amber-50 text-amber-800 border-amber-300' },
+    { key: 'ON_HOLD', label: '4. On Hold', desc: 'Parts or access pause', color: 'bg-orange-50 text-orange-800 border-orange-300' },
+    { key: 'COMPLETED', label: '5. Completed', desc: 'Field repair done', color: 'bg-teal-50 text-teal-800 border-teal-300' },
+    { key: 'CLOSED', label: '6. Closed', desc: 'Manager sign-off', color: 'bg-slate-200 text-slate-800 border-slate-400' },
+    { key: 'CANCELLED', label: '7. Cancelled', desc: 'Cancelled order', color: 'bg-rose-50 text-rose-700 border-rose-200' },
   ];
 
   const criticalOrders = workOrders.filter(w => w.priority === 'CRITICAL' && w.status !== 'CLOSED');

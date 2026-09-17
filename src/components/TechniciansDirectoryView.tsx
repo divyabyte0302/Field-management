@@ -55,9 +55,9 @@ export const TechniciansDirectoryView: React.FC<TechniciansDirectoryViewProps> =
         setActiveTechDetail({
           ...t,
           assignedWorkOrders: assigned,
-          activeWorkOrder: assigned.find(w => ['ASSIGNED', 'ACCEPTED', 'IN_PROGRESS', 'ON_HOLD'].includes(w.status)) || null,
+          activeWorkOrder: assigned.find(w => ['ASSIGNED', 'IN_PROGRESS', 'ON_HOLD'].includes(w.status)) || null,
           totalJobsAssigned: assigned.length,
-          completedJobsCount: assigned.filter(w => ['COMPLETED', 'VERIFIED', 'CLOSED'].includes(w.status)).length,
+          completedJobsCount: assigned.filter(w => ['COMPLETED', 'CLOSED'].includes(w.status)).length,
         });
       }
     } finally {
@@ -189,7 +189,7 @@ export const TechniciansDirectoryView: React.FC<TechniciansDirectoryViewProps> =
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {filteredTechs.map((tech) => {
           const activeWO = workOrders.find(
-            w => w.assignedTechnicianId === tech.id && ['ASSIGNED', 'ACCEPTED', 'IN_PROGRESS', 'ON_HOLD'].includes(w.status)
+            w => w.assignedTechnicianId === tech.id && ['ASSIGNED', 'IN_PROGRESS', 'ON_HOLD'].includes(w.status)
           );
 
           return (

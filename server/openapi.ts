@@ -131,7 +131,7 @@ export const OPENAPI_SPEC = {
         summary: "List work orders with multi-tenant filtering",
         security: [{ BearerAuth: [] }],
         parameters: [
-          { name: "status", in: "query", schema: { type: "string", enum: ["NEW", "TRIAGED", "ASSIGNED", "ACCEPTED", "IN_PROGRESS", "ON_HOLD", "COMPLETED", "VERIFIED", "CLOSED"] } },
+          { name: "status", in: "query", schema: { type: "string", enum: ["NEW", "ASSIGNED", "IN_PROGRESS", "ON_HOLD", "COMPLETED", "CLOSED", "CANCELLED"] } },
           { name: "priority", in: "query", schema: { type: "string", enum: ["CRITICAL", "HIGH", "MEDIUM", "LOW"] } },
           { name: "facilityId", in: "query", schema: { type: "string" } },
           { name: "query", in: "query", schema: { type: "string" } },
@@ -193,7 +193,7 @@ export const OPENAPI_SPEC = {
         tags: ["Work Orders"],
         summary: "Advance work order through state machine",
         security: [{ BearerAuth: [] }],
-        description: "Validates state transitions according to KEYSTONE 9-stage finite state machine and RBAC constraints.",
+        description: "Validates state transitions according to Document v1.0 Section 10 finite state machine and RBAC constraints.",
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
         requestBody: {
           required: true,
@@ -203,7 +203,7 @@ export const OPENAPI_SPEC = {
                 type: "object",
                 required: ["targetStatus"],
                 properties: {
-                  targetStatus: { type: "string", enum: ["TRIAGED", "ASSIGNED", "ACCEPTED", "IN_PROGRESS", "ON_HOLD", "COMPLETED", "VERIFIED", "CLOSED"] },
+                  targetStatus: { type: "string", enum: ["ASSIGNED", "IN_PROGRESS", "ON_HOLD", "COMPLETED", "CLOSED", "CANCELLED"] },
                   notes: { type: "string" },
                   holdReason: { type: "string" },
                   rejectionReason: { type: "string" }

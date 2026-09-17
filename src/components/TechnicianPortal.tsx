@@ -199,9 +199,9 @@ export const TechnicianPortal: React.FC = () => {
 
   // Metrics calculations for technician workflow
   const assignedJobs = workOrders;
-  const pendingJobs = workOrders.filter(w => ['ASSIGNED', 'ACCEPTED'].includes(w.status));
-  const inProgressJobs = workOrders.filter(w => w.status === 'IN_PROGRESS');
-  const completedJobs = workOrders.filter(w => ['COMPLETED', 'VERIFIED', 'CLOSED'].includes(w.status));
+  const pendingJobs = workOrders.filter(w => w.status === 'ASSIGNED');
+  const inProgressJobs = workOrders.filter(w => w.status === 'IN_PROGRESS' || w.status === 'ON_HOLD');
+  const completedJobs = workOrders.filter(w => ['COMPLETED', 'CLOSED'].includes(w.status));
   const upcomingJobs = workOrders.filter(w => ['ASSIGNED'].includes(w.status));
 
   // Calculate hours worked today and parts used today
@@ -218,9 +218,9 @@ export const TechnicianPortal: React.FC = () => {
 
   // Filter queue based on tab
   const filteredQueue = workOrders.filter(wo => {
-    if (workflowFilter === 'PENDING') return ['ASSIGNED', 'ACCEPTED'].includes(wo.status);
-    if (workflowFilter === 'IN_PROGRESS') return wo.status === 'IN_PROGRESS';
-    if (workflowFilter === 'COMPLETED') return ['COMPLETED', 'VERIFIED', 'CLOSED'].includes(wo.status);
+    if (workflowFilter === 'PENDING') return wo.status === 'ASSIGNED';
+    if (workflowFilter === 'IN_PROGRESS') return wo.status === 'IN_PROGRESS' || wo.status === 'ON_HOLD';
+    if (workflowFilter === 'COMPLETED') return ['COMPLETED', 'CLOSED'].includes(wo.status);
     return true;
   });
 
@@ -433,39 +433,37 @@ export const TechnicianPortal: React.FC = () => {
                   Technician Action Controls
                 </span>
                 <div className="flex flex-wrap gap-2.5">
-                  {/* Action 1: Accept Job */}
+                  {/* Action 1: Start Work / Travel */}
                   {selectedOrder.status === 'ASSIGNED' && (
-                    <button
-                      id="btn-tech-accept"
-                      onClick={() => handleTransition('ACCEPTED')}
-                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer transition-colors"
-                    >
-                      <Check className="w-4 h-4" />
-                      <span>Accept Job Assignment</span>
-                    </button>
+                    <>
+                      <button
+                        id="btn-tech-travel"
+                        onClick={handleStartTravel}
+                        className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer transition-colors"
+                      >
+                        <Navigation className="w-4 h-4" />
+                        <span>Start Travel (En Route)</span>
+                      </button>
+                      <button
+                        id="btn-tech-start-work"
+                        onClick={() => handleTransition('IN_PROGRESS')}
+                        className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer transition-colors"
+                      >
+                        <Play className="w-4 h-4" />
+                        <span>Start On-Site Work (IN_PROGRESS)</span>
+                      </button>
+                    </>
                   )}
 
-                  {/* Action 2: Start Travel */}
-                  {(selectedOrder.status === 'ASSIGNED' || selectedOrder.status === 'ACCEPTED') && (
+                  {/* Action 2: Resume Work from Hold */}
+                  {selectedOrder.status === 'ON_HOLD' && (
                     <button
-                      id="btn-tech-travel"
-                      onClick={handleStartTravel}
-                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer transition-colors"
-                    >
-                      <Navigation className="w-4 h-4" />
-                      <span>Start Travel (En Route)</span>
-                    </button>
-                  )}
-
-                  {/* Action 3: Start Work */}
-                  {(selectedOrder.status === 'ACCEPTED' || selectedOrder.status === 'ON_HOLD') && (
-                    <button
-                      id="btn-tech-start-work"
+                      id="btn-tech-resume-work"
                       onClick={() => handleTransition('IN_PROGRESS')}
                       className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer transition-colors"
                     >
                       <Play className="w-4 h-4" />
-                      <span>Start On-Site Work</span>
+                      <span>Resume On-Site Work</span>
                     </button>
                   )}
 

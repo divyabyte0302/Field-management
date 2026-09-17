@@ -77,6 +77,42 @@ function enrichWorkOrderRecord(order: WorkOrder, userRoles?: RoleName[]): WorkOr
   const slaAssessment = assessWorkOrderSla(order, policy);
   const financials = calculateFinancialSummary(order);
 
+  // Ensure statusHistory is present and populated per Document v1.0 Section 11
+  let statusHistory = order.statusHistory || [];
+  if (statusHistory.length === 0) {
+    // Reconstruct statusHistory from auditLogs or create initial record
+    const statusAuditLogs = (order.auditLogs || []).filter(
+      a => a.newState || a.action === 'STATUS_TRANSITION' || a.action === 'ASSIGNED' || a.action === 'CREATED'
+    );
+    if (statusAuditLogs.length > 0) {
+      statusHistory = statusAuditLogs.map((log, idx) => ({
+        id: `sh-${order.id}-${idx}`,
+        workOrderId: order.id,
+        previousStatus: (log.previousState as WorkOrderStatus) || 'NEW',
+        newStatus: (log.newState as WorkOrderStatus) || order.status,
+        changedById: 'usr-system',
+        changedByName: log.performedBy || 'System',
+        changedByRole: log.performedByRole || 'DISPATCHER',
+        timestamp: log.timestamp || order.createdAt || new Date().toISOString(),
+        note: log.notes || `Transition to ${log.newState || order.status}`,
+      }));
+    } else {
+      statusHistory = [
+        {
+          id: `sh-init-${order.id}`,
+          workOrderId: order.id,
+          previousStatus: 'NEW',
+          newStatus: order.status,
+          changedById: 'usr-system',
+          changedByName: 'Dispatch System',
+          changedByRole: 'DISPATCHER',
+          timestamp: order.createdAt || new Date().toISOString(),
+          note: `Work order initialized at status ${order.status}`,
+        }
+      ];
+    }
+  }
+
   return {
     ...order,
     slaPolicyId: policy?.id || order.slaPolicyId,
@@ -90,6 +126,7 @@ function enrichWorkOrderRecord(order: WorkOrder, userRoles?: RoleName[]): WorkOr
     comments: order.comments || [],
     attachments: order.attachments || [],
     assignmentHistory: order.assignmentHistory || [],
+    statusHistory,
     permittedNextStates: getPermittedNextStates(order.status, userRoles || []),
   };
 }
@@ -646,22 +683,21 @@ async function startServer() {
     }
 
     const totalOrders = scopedWorkOrders.length;
-    const openOrders = scopedWorkOrders.filter(w => ['NEW', 'TRIAGED', 'ASSIGNED', 'ACCEPTED', 'IN_PROGRESS', 'ON_HOLD'].includes(w.status)).length;
+    const openOrders = scopedWorkOrders.filter(w => ['NEW', 'ASSIGNED', 'IN_PROGRESS', 'ON_HOLD'].includes(w.status)).length;
     const inProgressOrders = scopedWorkOrders.filter(w => w.status === 'IN_PROGRESS').length;
-    const completedOrders = scopedWorkOrders.filter(w => ['COMPLETED', 'VERIFIED', 'CLOSED'].includes(w.status)).length;
+    const completedOrders = scopedWorkOrders.filter(w => ['COMPLETED', 'CLOSED'].includes(w.status)).length;
     
     // Overdue work orders
     const now = Date.now();
     const overdueOrders = scopedWorkOrders.filter(w => {
-      if (['COMPLETED', 'VERIFIED', 'CLOSED'].includes(w.status)) return false;
+      if (['COMPLETED', 'CLOSED', 'CANCELLED'].includes(w.status)) return false;
       const isPastResolution = w.slaResolutionDeadline && new Date(w.slaResolutionDeadline).getTime() < now;
       return isPastResolution || w.isSlaResolutionBreached;
     }).length;
 
-    // Status breakdown
+    // Status breakdown (Document v1.0 Section 10 FSM)
     const statusCounts: Record<WorkOrderStatus, number> = {
-      NEW: 0, TRIAGED: 0, ASSIGNED: 0, ACCEPTED: 0, 
-      IN_PROGRESS: 0, ON_HOLD: 0, COMPLETED: 0, VERIFIED: 0, CLOSED: 0
+      NEW: 0, ASSIGNED: 0, IN_PROGRESS: 0, ON_HOLD: 0, COMPLETED: 0, CLOSED: 0, CANCELLED: 0
     };
     scopedWorkOrders.forEach(w => {
       if (statusCounts[w.status] !== undefined) {
@@ -682,7 +718,7 @@ async function startServer() {
     // SLA compliance calculation
     const breachedOrders = scopedWorkOrders.filter(w => w.isSlaResponseBreached || w.isSlaResolutionBreached).length;
     const atRiskOrders = scopedWorkOrders.filter(w => {
-      if (['COMPLETED', 'VERIFIED', 'CLOSED'].includes(w.status)) return false;
+      if (['COMPLETED', 'CLOSED', 'CANCELLED'].includes(w.status)) return false;
       if (w.isSlaResolutionBreached) return false;
       if (!w.slaResolutionDeadline) return false;
       const minsLeft = (new Date(w.slaResolutionDeadline).getTime() - now) / 60000;
@@ -700,7 +736,7 @@ async function startServer() {
       ? Math.round((activeTechCount / technicians.length) * 100) 
       : 0;
 
-    const unassignedOrders = scopedWorkOrders.filter(w => !w.assignedTechnicianId && !['COMPLETED', 'VERIFIED', 'CLOSED'].includes(w.status)).length;
+    const unassignedOrders = scopedWorkOrders.filter(w => !w.assignedTechnicianId && !['COMPLETED', 'CLOSED', 'CANCELLED'].includes(w.status)).length;
 
     const techStats = {
       total: technicians.length,
@@ -734,17 +770,15 @@ async function startServer() {
 
     const totalServiceCost = Number((totalPartsCost + totalLaborCost).toFixed(2));
 
-    // Chart 1: Work orders by status
+    // Chart 1: Work orders by status (Document v1.0 Section 10)
     const statusDistribution = [
       { status: 'NEW' as WorkOrderStatus, label: 'New', count: statusCounts.NEW, color: '#94a3b8' },
-      { status: 'TRIAGED' as WorkOrderStatus, label: 'Triaged', count: statusCounts.TRIAGED, color: '#818cf8' },
       { status: 'ASSIGNED' as WorkOrderStatus, label: 'Assigned', count: statusCounts.ASSIGNED, color: '#38bdf8' },
-      { status: 'ACCEPTED' as WorkOrderStatus, label: 'Accepted', count: statusCounts.ACCEPTED, color: '#0ea5e9' },
       { status: 'IN_PROGRESS' as WorkOrderStatus, label: 'In Progress', count: statusCounts.IN_PROGRESS, color: '#f59e0b' },
       { status: 'ON_HOLD' as WorkOrderStatus, label: 'On Hold', count: statusCounts.ON_HOLD, color: '#fb923c' },
       { status: 'COMPLETED' as WorkOrderStatus, label: 'Completed', count: statusCounts.COMPLETED, color: '#14b8a6' },
-      { status: 'VERIFIED' as WorkOrderStatus, label: 'Verified', count: statusCounts.VERIFIED, color: '#10b981' },
       { status: 'CLOSED' as WorkOrderStatus, label: 'Closed', count: statusCounts.CLOSED, color: '#64748b' },
+      { status: 'CANCELLED' as WorkOrderStatus, label: 'Cancelled', count: statusCounts.CANCELLED, color: '#f43f5e' },
     ];
 
     // Chart 2: Work orders by priority
@@ -758,8 +792,8 @@ async function startServer() {
     // Chart 3: Work orders by facility
     const facilityDistribution = scopedFacilities.map(f => {
       const facOrders = scopedWorkOrders.filter(w => w.facilityId === f.id);
-      const activeFacOrders = facOrders.filter(w => !['COMPLETED', 'VERIFIED', 'CLOSED'].includes(w.status)).length;
-      const completedFacOrders = facOrders.filter(w => ['COMPLETED', 'VERIFIED', 'CLOSED'].includes(w.status)).length;
+      const activeFacOrders = facOrders.filter(w => !['COMPLETED', 'CLOSED', 'CANCELLED'].includes(w.status)).length;
+      const completedFacOrders = facOrders.filter(w => ['COMPLETED', 'CLOSED'].includes(w.status)).length;
       return {
         facilityName: f.name.replace('Commercial ', '').replace('Facility', '').trim(),
         total: facOrders.length,
@@ -795,8 +829,8 @@ async function startServer() {
     // Chart 6: Technician workload
     const technicianWorkload = technicians.map(t => {
       const assigned = scopedWorkOrders.filter(w => w.assignedTechnicianId === t.id);
-      const activeCount = assigned.filter(w => !['COMPLETED', 'VERIFIED', 'CLOSED'].includes(w.status)).length;
-      const completedCount = assigned.filter(w => ['COMPLETED', 'VERIFIED', 'CLOSED'].includes(w.status)).length;
+      const activeCount = assigned.filter(w => !['COMPLETED', 'CLOSED', 'CANCELLED'].includes(w.status)).length;
+      const completedCount = assigned.filter(w => ['COMPLETED', 'CLOSED'].includes(w.status)).length;
       const hoursLogged = Number(assigned.reduce((acc, w) => acc + (w.actualDurationHours || 0), 0).toFixed(1));
 
       return {
@@ -1267,9 +1301,12 @@ async function startServer() {
     }
 
     const previousStatus = order.status;
-    order.status = 'TRIAGED';
+    const reopenTarget: WorkOrderStatus = order.assignedTechnicianId ? 'ASSIGNED' : 'NEW';
+    order.status = reopenTarget;
     order.closedAt = undefined;
     order.updatedAt = new Date().toISOString();
+
+    const reopenNote = req.body.notes || 'Administrative override: Work order reopened for further remediation';
 
     order.auditLogs.push({
       id: `aud-${Date.now()}`,
@@ -1281,18 +1318,30 @@ async function startServer() {
       performedByRole: req.user?.roles[0] || 'ADMIN',
       timestamp: new Date().toISOString(),
       previousState: previousStatus,
-      newState: 'TRIAGED',
-      notes: req.body.notes || 'Administrative override: Work order reopened for further remediation',
+      newState: reopenTarget,
+      notes: reopenNote,
+    });
+
+    if (!order.statusHistory) {
+      order.statusHistory = [];
+    }
+    order.statusHistory.push({
+      id: `sh-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
+      workOrderId: order.id,
+      previousStatus: previousStatus,
+      newStatus: reopenTarget,
+      changedById: req.user?.userId || 'usr-admin',
+      changedByName: `${req.user?.firstName} ${req.user?.lastName}`,
+      changedByRole: req.user?.roles[0] || 'ADMIN',
+      timestamp: new Date().toISOString(),
+      note: reopenNote,
     });
 
     return res.json({
       success: true,
       statusCode: 200,
-      message: `Work Order ${order.workOrderNumber} reopened to TRIAGED status`,
-      data: {
-        ...order,
-        permittedNextStates: getPermittedNextStates(order.status, req.user?.roles || []),
-      },
+      message: `Work Order ${order.workOrderNumber} reopened to ${reopenTarget} status`,
+      data: enrichWorkOrderRecord(order, req.user?.roles || []),
     });
   });
 
@@ -1352,6 +1401,12 @@ async function startServer() {
     order.status = targetStatus;
     order.updatedAt = new Date().toISOString();
 
+    const transitionNote = notes || (
+      targetStatus === 'ON_HOLD' ? `On hold: ${holdReason}` :
+      targetStatus === 'IN_PROGRESS' && previousStatus === 'COMPLETED' ? `Returned for rework: ${rejectionReason}` :
+      `Transition to ${targetStatus}`
+    );
+
     if (targetStatus === 'ON_HOLD' && holdReason) {
       order.holdReason = holdReason;
     }
@@ -1362,9 +1417,6 @@ async function startServer() {
       order.completedAt = new Date().toISOString();
       order.resolutionNotes = notes || 'Technician completed all checklist tasks and verified asset functionality';
       order.actualDurationHours = order.actualDurationHours || 1.5;
-    }
-    if (targetStatus === 'VERIFIED') {
-      order.verifiedAt = new Date().toISOString();
     }
     if (targetStatus === 'CLOSED') {
       order.closedAt = new Date().toISOString();
@@ -1381,10 +1433,26 @@ async function startServer() {
       timestamp: new Date().toISOString(),
       previousState: previousStatus,
       newState: targetStatus,
-      notes: notes || (targetStatus === 'ON_HOLD' ? `On hold: ${holdReason}` : targetStatus === 'IN_PROGRESS' && previousStatus === 'COMPLETED' ? `Returned for rework: ${rejectionReason}` : `Transition to ${targetStatus}`),
+      notes: transitionNote,
     };
 
     order.auditLogs.push(auditEntry);
+
+    // Append to immutable status history (Document v1.0 Section 11)
+    if (!order.statusHistory) {
+      order.statusHistory = [];
+    }
+    order.statusHistory.push({
+      id: `sh-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
+      workOrderId: order.id,
+      previousStatus: previousStatus,
+      newStatus: targetStatus,
+      changedById: req.user?.userId || 'usr-system',
+      changedByName: `${req.user?.firstName} ${req.user?.lastName}`,
+      changedByRole: req.user?.roles[0] || 'DISPATCHER',
+      timestamp: new Date().toISOString(),
+      note: transitionNote,
+    });
 
     // Notification triggers
     if (targetStatus === 'COMPLETED') {
@@ -1398,15 +1466,15 @@ async function startServer() {
         targetRoles: ['CUSTOMER', 'ADMIN', 'DISPATCHER'],
         link: 'customer-portal',
       });
-    } else if (targetStatus === 'VERIFIED') {
+    } else if (targetStatus === 'CLOSED') {
       createNotification({
         organizationId: order.organizationId,
-        type: 'CUSTOMER_VERIFIED',
-        title: 'Work Order Verified',
-        message: `${order.workOrderNumber} was verified and signed off by the customer.`,
+        type: 'STATUS_CHANGED',
+        title: 'Work Order Closed',
+        message: `${order.workOrderNumber} was approved and closed.`,
         entityType: 'WORK_ORDER',
         entityId: order.id,
-        targetRoles: ['ADMIN', 'DISPATCHER'],
+        targetRoles: ['ADMIN', 'DISPATCHER', 'CUSTOMER'],
         link: 'work-orders',
       });
     } else if (targetStatus === 'IN_PROGRESS' && previousStatus === 'COMPLETED') {
@@ -1426,10 +1494,7 @@ async function startServer() {
       success: true,
       statusCode: 200,
       message: `State updated from ${previousStatus} to ${targetStatus}`,
-      data: {
-        ...order,
-        permittedNextStates: getPermittedNextStates(order.status, req.user?.roles || []),
-      },
+      data: enrichWorkOrderRecord(order, req.user?.roles || []),
     });
   };
 
@@ -1477,10 +1542,25 @@ async function startServer() {
 
     order.assignmentHistory.push(assignmentRecord);
 
+    const prevStatus = order.status;
     order.assignedTechnicianId = tech.id;
     order.assignedTechnicianName = tech.name;
-    if (order.status === 'NEW' || order.status === 'TRIAGED') {
+    if (order.status === 'NEW') {
       order.status = 'ASSIGNED';
+      if (!order.statusHistory) {
+        order.statusHistory = [];
+      }
+      order.statusHistory.push({
+        id: `sh-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
+        workOrderId: order.id,
+        previousStatus: prevStatus,
+        newStatus: 'ASSIGNED',
+        changedById: req.user?.userId || 'usr-dispatcher',
+        changedByName: `${req.user?.firstName} ${req.user?.lastName}`,
+        changedByRole: req.user?.roles[0] || 'DISPATCHER',
+        timestamp: now,
+        note: notes || `Assigned to technician ${tech.name}`,
+      });
     }
     order.updatedAt = now;
 
@@ -1821,12 +1901,27 @@ async function startServer() {
     order.timeEntries = order.timeEntries || [];
     order.timeEntries.push(timerEntry);
 
-    // If order is ACCEPTED or ASSIGNED, advance automatically to IN_PROGRESS
-    if (order.status === 'ACCEPTED' || order.status === 'ASSIGNED') {
+    // If order is ASSIGNED, advance automatically to IN_PROGRESS
+    if (order.status === 'ASSIGNED') {
+      const prevStatus = order.status;
       order.status = 'IN_PROGRESS';
       if (!order.respondedAt) {
         order.respondedAt = now;
       }
+      if (!order.statusHistory) {
+        order.statusHistory = [];
+      }
+      order.statusHistory.push({
+        id: `sh-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
+        workOrderId: order.id,
+        previousStatus: prevStatus,
+        newStatus: 'IN_PROGRESS',
+        changedById: req.user?.userId || 'usr-tech',
+        changedByName: `${req.user?.firstName} ${req.user?.lastName}`,
+        changedByRole: req.user?.roles[0] || 'TECHNICIAN',
+        timestamp: now,
+        note: 'Live work timer started on site by technician',
+      });
     }
 
     order.updatedAt = now;
@@ -2703,7 +2798,7 @@ async function startServer() {
       }
 
       // Resolution metrics
-      if (['COMPLETED', 'VERIFIED', 'CLOSED'].includes(order.status)) {
+      if (['COMPLETED', 'CLOSED'].includes(order.status)) {
         const compTime = ((order.completedAt ? new Date(order.completedAt).getTime() : new Date().getTime()) - new Date(order.createdAt).getTime()) / (60 * 1000);
         totalResolutionMinutes += Math.max(0, compTime);
         resolvedOrdersCount++;
@@ -2827,7 +2922,7 @@ async function startServer() {
     const assignedOrders = workOrders
       .filter(w => w.assignedTechnicianId === tech.id)
       .map(w => enrichWorkOrderRecord(w, req.user?.roles));
-    const activeOrder = assignedOrders.find(w => ['ASSIGNED', 'ACCEPTED', 'IN_PROGRESS', 'ON_HOLD'].includes(w.status));
+    const activeOrder = assignedOrders.find(w => ['ASSIGNED', 'IN_PROGRESS', 'ON_HOLD'].includes(w.status));
     
     return res.json({
       success: true,
@@ -2837,7 +2932,7 @@ async function startServer() {
         activeWorkOrder: activeOrder || null,
         assignedWorkOrders: assignedOrders,
         totalJobsAssigned: assignedOrders.length,
-        completedJobsCount: assignedOrders.filter(w => ['COMPLETED', 'VERIFIED', 'CLOSED'].includes(w.status)).length,
+        completedJobsCount: assignedOrders.filter(w => ['COMPLETED', 'CLOSED'].includes(w.status)).length,
       }
     });
   };
@@ -2916,7 +3011,7 @@ async function startServer() {
         assets: facilityAssets,
         workOrders: facilityOrders,
         inventory: facilityInv,
-        activeOrdersCount: facilityOrders.filter(w => !['COMPLETED', 'VERIFIED', 'CLOSED'].includes(w.status)).length,
+        activeOrdersCount: facilityOrders.filter(w => !['COMPLETED', 'CLOSED', 'CANCELLED'].includes(w.status)).length,
       }
     });
   };
@@ -3025,7 +3120,7 @@ async function startServer() {
     
     // Compute KPI rollups
     const totalOrders = enriched.length;
-    const completedOrders = enriched.filter(w => ['COMPLETED', 'VERIFIED', 'CLOSED'].includes(w.status)).length;
+    const completedOrders = enriched.filter(w => ['COMPLETED', 'CLOSED'].includes(w.status)).length;
     const breachedOrders = enriched.filter(w => w.slaStatus === 'BREACHED').length;
     const slaComplianceRate = totalOrders > 0 ? Math.round(((totalOrders - breachedOrders) / totalOrders) * 100) : 100;
     
@@ -3379,7 +3474,7 @@ async function startServer() {
     request.status = 'CONVERTED';
 
     let techName: string | undefined;
-    let initialStatus: WorkOrderStatus = 'TRIAGED';
+    let initialStatus: WorkOrderStatus = 'NEW';
     if (assignedTechnicianId) {
       const tech = technicians.find(t => t.id === assignedTechnicianId);
       techName = tech?.name;
@@ -3637,8 +3732,7 @@ async function startServer() {
           roles: ['SUPER_ADMIN', 'ADMIN', 'DISPATCHER', 'TECHNICIAN', 'CUSTOMER']
         },
         workOrderLifecycle: [
-          'NEW', 'TRIAGED', 'ASSIGNED', 'ACCEPTED', 'IN_PROGRESS', 
-          'ON_HOLD', 'COMPLETED', 'VERIFIED', 'CLOSED'
+          'NEW', 'ASSIGNED', 'IN_PROGRESS', 'ON_HOLD', 'COMPLETED', 'CLOSED', 'CANCELLED'
         ],
         transitions: VALID_TRANSITIONS,
         permittedRoles: PERMITTED_ROLES_PER_TARGET,

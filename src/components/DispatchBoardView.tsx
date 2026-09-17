@@ -57,7 +57,7 @@ export const DispatchBoardView: React.FC<DispatchBoardViewProps> = ({
   const unassignedRequests = serviceRequests.filter(s => s.status === 'PENDING_REVIEW' || !s.convertedWorkOrderId);
   
   const unassignedOrders = workOrders.filter(
-    wo => !wo.assignedTechnicianId && !['COMPLETED', 'VERIFIED', 'CLOSED'].includes(wo.status)
+    wo => !wo.assignedTechnicianId && !['COMPLETED', 'CLOSED', 'CANCELLED'].includes(wo.status)
   );
 
   const availableTechs = technicians.filter(t => t.status === 'AVAILABLE');
@@ -68,20 +68,20 @@ export const DispatchBoardView: React.FC<DispatchBoardViewProps> = ({
   );
 
   const overdueJobs = workOrders.filter(
-    wo => wo.slaStatus === 'BREACHED' || (wo.dueDate && new Date(wo.dueDate).getTime() < Date.now() && !['COMPLETED', 'VERIFIED', 'CLOSED'].includes(wo.status))
+    wo => wo.slaStatus === 'BREACHED' || (wo.dueDate && new Date(wo.dueDate).getTime() < Date.now() && !['COMPLETED', 'CLOSED', 'CANCELLED'].includes(wo.status))
   );
 
   const atRiskJobs = workOrders.filter(
-    wo => wo.slaStatus === 'AT_RISK' && !['COMPLETED', 'VERIFIED', 'CLOSED'].includes(wo.status)
+    wo => wo.slaStatus === 'AT_RISK' && !['COMPLETED', 'CLOSED', 'CANCELLED'].includes(wo.status)
   );
 
   const dispatchWorkload = workOrders.filter(
-    wo => !['COMPLETED', 'VERIFIED', 'CLOSED'].includes(wo.status)
+    wo => !['COMPLETED', 'CLOSED', 'CANCELLED'].includes(wo.status)
   );
 
   // Filter dispatchable orders
   const dispatchableOrders = workOrders.filter(
-    wo => ['NEW', 'TRIAGED', 'ASSIGNED', 'ON_HOLD', 'ACCEPTED'].includes(wo.status)
+    wo => ['NEW', 'ASSIGNED', 'ON_HOLD'].includes(wo.status)
   );
 
   // Filter technicians
@@ -208,7 +208,7 @@ export const DispatchBoardView: React.FC<DispatchBoardViewProps> = ({
   // Urgent orders that need fast attention
   const urgentOrders = workOrders.filter(
     wo => (wo.priority === 'CRITICAL' || wo.slaStatus === 'BREACHED' || wo.slaStatus === 'AT_RISK') &&
-          !['COMPLETED', 'VERIFIED', 'CLOSED'].includes(wo.status)
+          !['COMPLETED', 'CLOSED', 'CANCELLED'].includes(wo.status)
   );
 
   return (
@@ -604,7 +604,7 @@ export const DispatchBoardView: React.FC<DispatchBoardViewProps> = ({
               ) : (
                 filteredTechnicians.map((tech) => {
                   const techOrders = workOrders.filter(
-                    wo => wo.assignedTechnicianId === tech.id && !['COMPLETED', 'VERIFIED', 'CLOSED'].includes(wo.status)
+                    wo => wo.assignedTechnicianId === tech.id && !['COMPLETED', 'CLOSED', 'CANCELLED'].includes(wo.status)
                   );
 
                   // Calculate skills match with selected order

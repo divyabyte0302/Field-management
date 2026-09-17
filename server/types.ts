@@ -19,6 +19,7 @@ export interface WorkOrderStatusHistoryRecord {
   workOrderId: string;
   previousStatus: WorkOrderStatus;
   newStatus: WorkOrderStatus;
+  changedById?: string;
   changedByUserId?: string;
   changedByName: string;
   changedByRole: string;
@@ -297,6 +298,7 @@ export interface WorkOrder {
   comments?: Comment[];
   attachments?: Attachment[];
   assignmentHistory?: AssignmentRecord[];
+  statusHistory?: WorkOrderStatusHistoryRecord[];
 }
 
 export interface ServiceRequest {

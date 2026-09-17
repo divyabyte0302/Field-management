@@ -115,7 +115,7 @@ export const CustomerPortal: React.FC = () => {
     try {
       const signOffNote = `Customer sign-off: Rated ${satisfactionRating}/5 stars. Feedback: ${verificationFeedback || 'Work verified satisfactory.'} (${user?.firstName} ${user?.lastName})`;
       await api.transitionWorkOrder(verifyingOrder.id, {
-        targetStatus: 'VERIFIED',
+        targetStatus: 'CLOSED',
         notes: signOffNote,
       });
 
@@ -158,33 +158,29 @@ export const CustomerPortal: React.FC = () => {
     facilityFilter === 'ALL' || w.facilityId === facilityFilter
   );
 
-  const activeOrders = filteredWorkOrders.filter(w => !['VERIFIED', 'CLOSED'].includes(w.status));
-  const completedHistory = filteredWorkOrders.filter(w => ['VERIFIED', 'CLOSED'].includes(w.status));
+  const activeOrders = filteredWorkOrders.filter(w => !['CLOSED', 'CANCELLED'].includes(w.status));
+  const completedHistory = filteredWorkOrders.filter(w => w.status === 'CLOSED');
   const pendingVerificationOrders = filteredWorkOrders.filter(w => w.status === 'COMPLETED');
 
   // Tracking stages helper
   const getProgressStageIndex = (status: string) => {
     switch (status) {
       case 'NEW': return 0;
-      case 'TRIAGED': return 1;
-      case 'ASSIGNED': return 2;
-      case 'ACCEPTED': return 3;
-      case 'IN_PROGRESS': return 4;
-      case 'COMPLETED': return 5;
-      case 'VERIFIED':
-      case 'CLOSED': return 6;
+      case 'ASSIGNED': return 1;
+      case 'IN_PROGRESS': return 2;
+      case 'ON_HOLD': return 2;
+      case 'COMPLETED': return 3;
+      case 'CLOSED': return 4;
       default: return 0;
     }
   };
 
   const trackingSteps = [
-    { label: 'Intake', desc: 'Submitted' },
-    { label: 'Triaged', desc: 'SLA Rated' },
+    { label: 'Intake', desc: 'Work Order Created' },
     { label: 'Assigned', desc: 'Technician Dispatched' },
-    { label: 'Accepted', desc: 'Tech En Route' },
     { label: 'In Progress', desc: 'On-Site Work' },
     { label: 'Completed', desc: 'Pending Sign-Off' },
-    { label: 'Verified', desc: 'Approved' },
+    { label: 'Closed', desc: 'Verified & Closed' },
   ];
 
   return (

@@ -187,8 +187,7 @@ export const WorkOrdersView: React.FC<WorkOrdersViewProps> = ({
   const paginatedOrders = filteredOrders.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const lifecycleSteps: WorkOrderStatus[] = [
-    'NEW', 'TRIAGED', 'ASSIGNED', 'ACCEPTED', 
-    'IN_PROGRESS', 'ON_HOLD', 'COMPLETED', 'VERIFIED', 'CLOSED'
+    'NEW', 'ASSIGNED', 'IN_PROGRESS', 'ON_HOLD', 'COMPLETED', 'CLOSED'
   ];
 
   const handleExecuteTransition = async (target: WorkOrderStatus) => {
@@ -649,12 +648,13 @@ export const WorkOrdersView: React.FC<WorkOrdersViewProps> = ({
                         </td>
                         <td className="py-3.5 px-4">
                           <span className={`px-2 py-0.5 text-[10px] font-bold uppercase rounded border ${
-                            wo.status === 'IN_PROGRESS' ? 'bg-amber-50 text-amber-800 border-amber-300' :
-                            wo.status === 'COMPLETED' ? 'bg-teal-50 text-teal-800 border-teal-300' :
-                            wo.status === 'VERIFIED' ? 'bg-emerald-50 text-emerald-800 border-emerald-300' :
+                            wo.status === 'NEW' ? 'bg-slate-100 text-slate-700 border-slate-300' :
                             wo.status === 'ASSIGNED' ? 'bg-blue-50 text-blue-800 border-blue-300' :
+                            wo.status === 'IN_PROGRESS' ? 'bg-amber-50 text-amber-800 border-amber-300' :
                             wo.status === 'ON_HOLD' ? 'bg-orange-50 text-orange-800 border-orange-300' :
-                            wo.status === 'CLOSED' ? 'bg-slate-100 text-slate-600 border-slate-300' :
+                            wo.status === 'COMPLETED' ? 'bg-teal-50 text-teal-800 border-teal-300' :
+                            wo.status === 'CLOSED' ? 'bg-slate-200 text-slate-800 border-slate-400' :
+                            wo.status === 'CANCELLED' ? 'bg-rose-50 text-rose-800 border-rose-300' :
                             'bg-slate-50 text-slate-700 border-slate-300'
                           }`}>
                             {wo.status}
@@ -727,8 +727,8 @@ export const WorkOrdersView: React.FC<WorkOrdersViewProps> = ({
         </div>
       ) : (
         /* Kanban Board View */
-        <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-4 overflow-x-auto pb-4">
-          {(['NEW', 'TRIAGED', 'ASSIGNED', 'IN_PROGRESS', 'COMPLETED'] as WorkOrderStatus[]).map((stage) => {
+        <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-4 overflow-x-auto pb-4">
+          {(['NEW', 'ASSIGNED', 'IN_PROGRESS', 'ON_HOLD', 'COMPLETED', 'CLOSED'] as WorkOrderStatus[]).map((stage) => {
             const stageOrders = filteredOrders.filter(w => w.status === stage);
             return (
               <div key={stage} className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs flex flex-col h-[650px]">
@@ -973,34 +973,40 @@ export const WorkOrdersView: React.FC<WorkOrdersViewProps> = ({
                     </div>
 
                     {/* Visual Step Rail */}
-                    <div className="grid grid-cols-9 gap-1 py-2">
-                      {lifecycleSteps.map((step, idx) => {
-                        const currentIdx = lifecycleSteps.indexOf(selectedOrder.status);
-                        const isPassed = idx < currentIdx;
-                        const isCurrent = idx === currentIdx;
+                    {selectedOrder.status === 'CANCELLED' ? (
+                      <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-center text-xs font-bold text-rose-800">
+                        Work Order has been CANCELLED (Terminal State)
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-6 gap-1 py-2">
+                        {lifecycleSteps.map((step, idx) => {
+                          const currentIdx = lifecycleSteps.indexOf(selectedOrder.status);
+                          const isPassed = idx < currentIdx;
+                          const isCurrent = idx === currentIdx;
 
-                        return (
-                          <div key={step} className="flex flex-col items-center">
-                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                              isCurrent ? 'bg-blue-600 text-white ring-2 ring-blue-500/30' :
-                              isPassed ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-slate-100 text-slate-400'
-                            }`}>
-                              {idx + 1}
+                          return (
+                            <div key={step} className="flex flex-col items-center">
+                              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                                isCurrent ? 'bg-blue-600 text-white ring-2 ring-blue-500/30' :
+                                isPassed ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-slate-100 text-slate-400'
+                              }`}>
+                                {idx + 1}
+                              </div>
+                              <span className={`text-[8px] font-medium mt-1 truncate max-w-full ${
+                                isCurrent ? 'text-blue-700 font-bold' : 'text-slate-400'
+                              }`}>
+                                {step}
+                              </span>
                             </div>
-                            <span className={`text-[8px] font-medium mt-1 truncate max-w-full ${
-                              isCurrent ? 'text-blue-700 font-bold' : 'text-slate-400'
-                            }`}>
-                              {step}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
+                          );
+                        })}
+                      </div>
+                    )}
 
                     {/* State Machine Transition Actions */}
                     <div className="mt-4 pt-3 border-t border-slate-100">
                       <div className="text-xs font-semibold text-slate-700 mb-2">
-                        Permitted Next Transitions (Deterministic):
+                        Permitted Next Transitions (Deterministic FSM):
                       </div>
 
                       {selectedOrder.permittedNextStates && selectedOrder.permittedNextStates.length > 0 ? (
@@ -1011,7 +1017,13 @@ export const WorkOrdersView: React.FC<WorkOrdersViewProps> = ({
                                 key={target}
                                 disabled={isSubmitting}
                                 onClick={() => handleExecuteTransition(target)}
-                                className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-xs font-semibold rounded-lg shadow-2xs flex items-center space-x-1 cursor-pointer transition-colors"
+                                className={`px-3 py-1.5 text-white text-xs font-semibold rounded-lg shadow-2xs flex items-center space-x-1 cursor-pointer transition-colors disabled:opacity-50 ${
+                                  target === 'CANCELLED' ? 'bg-rose-600 hover:bg-rose-700' :
+                                  target === 'ON_HOLD' ? 'bg-orange-600 hover:bg-orange-700' :
+                                  target === 'COMPLETED' ? 'bg-teal-600 hover:bg-teal-700' :
+                                  target === 'CLOSED' ? 'bg-slate-700 hover:bg-slate-800' :
+                                  'bg-blue-600 hover:bg-blue-700'
+                                }`}
                               >
                                 <span>Move to {target}</span>
                                 <ArrowRight className="w-3.5 h-3.5" />
@@ -1037,12 +1049,23 @@ export const WorkOrdersView: React.FC<WorkOrdersViewProps> = ({
                                 className="w-full text-xs px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                               />
                             )}
+                            {selectedOrder.status === 'COMPLETED' && (
+                              <input
+                                type="text"
+                                placeholder="Rework / Rejection Reason (Required if returning to IN_PROGRESS)..."
+                                value={rejectionReason}
+                                onChange={(e) => setRejectionReason(e.target.value)}
+                                className="w-full text-xs px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                              />
+                            )}
                           </div>
                         </div>
                       ) : (
                         <div className="text-xs text-slate-500 italic">
                           {selectedOrder.status === 'CLOSED' 
                             ? 'Work order is in terminal state CLOSED. Audit log permanently sealed.' 
+                            : selectedOrder.status === 'CANCELLED'
+                            ? 'Work order has been CANCELLED. No further transitions permitted.'
                             : 'No valid transitions available from this state for current role.'}
                         </div>
                       )}
@@ -1913,32 +1936,84 @@ export const WorkOrdersView: React.FC<WorkOrdersViewProps> = ({
 
               {/* AUDIT LOG TAB */}
               {drawerTab === 'audit' && (
-                <div className="space-y-3">
-                  <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center">
-                    <ShieldAlert className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
-                    Immutable Audit Trail ({selectedOrder.auditLogs?.length || 0})
-                  </h3>
-                  <div className="bg-white rounded-2xl border border-slate-200 p-4 max-h-96 overflow-y-auto divide-y divide-slate-100 shadow-xs">
-                    {selectedOrder.auditLogs && selectedOrder.auditLogs.length > 0 ? (
-                      selectedOrder.auditLogs.map((log) => (
-                        <div key={log.id} className="py-3 first:pt-0 last:pb-0 text-xs">
-                          <div className="flex items-center justify-between">
-                            <span className="font-bold text-slate-900">{log.action}</span>
-                            <span className="text-[10px] text-slate-400 font-mono">{new Date(log.timestamp).toLocaleString()}</span>
-                          </div>
-                          <div className="text-[11px] text-slate-500 mt-0.5">
-                            By: <span className="font-semibold text-slate-700">{log.performedBy}</span> ({log.performedByRole})
-                          </div>
-                          {log.notes && (
-                            <div className="text-[11px] text-slate-600 italic mt-1 bg-slate-50 p-2 rounded-lg border border-slate-200">
-                              "{log.notes}"
+                <div className="space-y-5">
+                  {/* Section 11 Status Transition History */}
+                  <div className="space-y-3">
+                    <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center">
+                      <History className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
+                      Lifecycle Status History ({selectedOrder.statusHistory?.length || 0})
+                    </h3>
+                    <div className="bg-white rounded-2xl border border-slate-200 p-4 max-h-72 overflow-y-auto divide-y divide-slate-100 shadow-xs">
+                      {selectedOrder.statusHistory && selectedOrder.statusHistory.length > 0 ? (
+                        selectedOrder.statusHistory.map((item) => (
+                          <div key={item.id} className="py-3 first:pt-0 last:pb-0 text-xs">
+                            <div className="flex items-center justify-between mb-1">
+                              <div className="flex items-center gap-1.5 font-bold">
+                                <span className="px-1.5 py-0.5 rounded text-[10px] bg-slate-100 text-slate-700 border border-slate-300">
+                                  {item.previousStatus}
+                                </span>
+                                <ArrowRight className="w-3 h-3 text-slate-400" />
+                                <span className={`px-1.5 py-0.5 rounded text-[10px] ${
+                                  item.newStatus === 'COMPLETED' ? 'bg-teal-50 text-teal-800 border border-teal-300' :
+                                  item.newStatus === 'CLOSED' ? 'bg-slate-200 text-slate-800 border border-slate-400' :
+                                  item.newStatus === 'CANCELLED' ? 'bg-rose-50 text-rose-800 border border-rose-300' :
+                                  item.newStatus === 'ON_HOLD' ? 'bg-orange-50 text-orange-800 border border-orange-300' :
+                                  item.newStatus === 'IN_PROGRESS' ? 'bg-amber-50 text-amber-800 border border-amber-300' :
+                                  'bg-blue-50 text-blue-800 border border-blue-300'
+                                }`}>
+                                  {item.newStatus}
+                                </span>
+                              </div>
+                              <span className="text-[10px] text-slate-400 font-mono">
+                                {new Date(item.timestamp).toLocaleString()}
+                              </span>
                             </div>
-                          )}
+                            <div className="text-[11px] text-slate-500">
+                              By: <span className="font-semibold text-slate-700">{item.changedByName}</span> ({item.changedByRole})
+                            </div>
+                            {item.note && (
+                              <div className="text-[11px] text-slate-600 italic mt-1 bg-slate-50 p-2 rounded-lg border border-slate-200">
+                                "{item.note}"
+                              </div>
+                            )}
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-xs text-slate-400 italic text-center py-4">
+                          No status transition history recorded yet. Initial state: {selectedOrder.status}
                         </div>
-                      ))
-                    ) : (
-                      <div className="text-xs text-slate-400 italic text-center py-4">No audit records recorded yet.</div>
-                    )}
+                      )}
+                    </div>
+                  </div>
+
+                  {/* General Audit Trail */}
+                  <div className="space-y-3">
+                    <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center">
+                      <ShieldAlert className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
+                      Immutable System Audit Trail ({selectedOrder.auditLogs?.length || 0})
+                    </h3>
+                    <div className="bg-white rounded-2xl border border-slate-200 p-4 max-h-72 overflow-y-auto divide-y divide-slate-100 shadow-xs">
+                      {selectedOrder.auditLogs && selectedOrder.auditLogs.length > 0 ? (
+                        selectedOrder.auditLogs.map((log) => (
+                          <div key={log.id} className="py-3 first:pt-0 last:pb-0 text-xs">
+                            <div className="flex items-center justify-between">
+                              <span className="font-bold text-slate-900">{log.action}</span>
+                              <span className="text-[10px] text-slate-400 font-mono">{new Date(log.timestamp).toLocaleString()}</span>
+                            </div>
+                            <div className="text-[11px] text-slate-500 mt-0.5">
+                              By: <span className="font-semibold text-slate-700">{log.performedBy}</span> ({log.performedByRole})
+                            </div>
+                            {log.notes && (
+                              <div className="text-[11px] text-slate-600 italic mt-1 bg-slate-50 p-2 rounded-lg border border-slate-200">
+                                "{log.notes}"
+                              </div>
+                            )}
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-xs text-slate-400 italic text-center py-4">No audit records recorded yet.</div>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
