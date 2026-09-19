@@ -191,7 +191,7 @@ app.use((req, res, next) => {
     res.json(OPENAPI_SPEC);
   });
 
-  app.get(['/api/docs', '/swagger-ui.html', '/api-docs'], (req: Request, res: Response) => {
+  app.get(['/api/docs', '/swagger-ui.html', '/api-docs', '/swagger', '/docs', '/swagger-ui'], (req: Request, res: Response) => {
     res.setHeader('Content-Type', 'text/html');
     res.send(renderSwaggerHtml('/api/v1/openapi.json'));
   });

@@ -459,6 +459,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                             <span>Settings / Users</span>
                           </button>
                         )}
+                        <button
+                          id="btn-nav-api-docs"
+                          onClick={() => { setActiveTab('api-docs'); setShowSystemMenu(false); }}
+                          className={`w-full px-3 py-2 text-left text-xs flex items-center gap-2 transition ${
+                            activeTab === 'api-docs' ? 'text-blue-700 bg-blue-50 font-semibold' : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
+                          }`}
+                        >
+                          <BookOpen className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>API Docs (Swagger)</span>
+                        </button>
                       </div>
                     )}
                   </div>
@@ -678,18 +688,30 @@ export const Navbar: React.FC<NavbarProps> = ({
                         <span>Notification Center</span>
                       </button>
 
-                      <a
-                        id="btn-menu-swagger-docs"
-                        href="/swagger-ui.html"
-                        target="_blank"
-                        rel="noreferrer"
-                        onClick={() => setShowProfileMenu(false)}
+                      <button
+                        id="btn-menu-api-docs-view"
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          setActiveTab('api-docs');
+                        }}
                         className="w-full text-left px-2.5 py-2 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-slate-900 flex items-center justify-between transition-colors font-medium"
                       >
                         <div className="flex items-center gap-2">
                           <BookOpen className="w-3.5 h-3.5 text-emerald-600" />
                           <span>Swagger API Docs</span>
                         </div>
+                        <span className="text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded font-mono font-semibold">OpenAPI</span>
+                      </button>
+
+                      <a
+                        id="btn-menu-swagger-docs"
+                        href="/swagger-ui.html"
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={() => setShowProfileMenu(false)}
+                        className="w-full text-left px-2.5 py-1 rounded-lg text-slate-500 hover:bg-slate-50 hover:text-slate-700 flex items-center justify-between transition-colors text-[11px]"
+                      >
+                        <span className="pl-5 text-slate-500">Standalone (/swagger-ui.html)</span>
                         <ExternalLink className="w-3 h-3 text-slate-400" />
                       </a>
 
@@ -948,6 +970,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                       <span>Settings / Users</span>
                     </button>
                   )}
+                  <button
+                    onClick={() => { setActiveTab('api-docs'); setShowMobileMenu(false); }}
+                    className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold ${
+                      activeTab === 'api-docs' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-50'
+                    }`}
+                  >
+                    <BookOpen className="w-4 h-4 text-emerald-600" />
+                    <span>Swagger API Docs</span>
+                  </button>
                 </div>
               </>
             )}

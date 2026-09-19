@@ -6,6 +6,22 @@
       "destination": "/api"
     },
     {
+      "source": "/swagger-ui.html",
+      "destination": "/swagger-ui.html"
+    },
+    {
+      "source": "/swagger",
+      "destination": "/swagger-ui.html"
+    },
+    {
+      "source": "/api-docs",
+      "destination": "/swagger-ui.html"
+    },
+    {
+      "source": "/docs",
+      "destination": "/swagger-ui.html"
+    },
+    {
       "source": "/((?!api/|assets/|.*\\.[\\w]+$).*)",
       "destination": "/index.html"
     }

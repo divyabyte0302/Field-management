@@ -10,6 +10,7 @@ import { TechnicianPortal } from './components/TechnicianPortal';
 import { CustomerPortal } from './components/CustomerPortal';
 import { UserManagementView } from './components/UserManagementView';
 import { SecurityArchitectureView } from './components/SecurityArchitectureView';
+import { ApiDocsView } from './components/ApiDocsView';
 import { SlaDashboardView } from './components/SlaDashboardView';
 import { InventoryManagementView } from './components/InventoryManagementView';
 import { TimeTrackingView } from './components/TimeTrackingView';
@@ -117,6 +118,8 @@ const MainApplication: React.FC = () => {
       setActiveTab('users');
     } else if (path.startsWith('/architecture') || path.startsWith('/security')) {
       setActiveTab('architecture');
+    } else if (path.startsWith('/api-docs') || path.startsWith('/swagger') || path.startsWith('/docs')) {
+      setActiveTab('api-docs');
     } else if (path === '/login') {
       setShowLoginModal(true);
     }
@@ -149,6 +152,8 @@ const MainApplication: React.FC = () => {
     } else if (tab === 'service-requests') {
       targetPath = entityId ? `/service-requests/${entityId}` : '/service-requests';
       if (entityId) setSelectedServiceRequestId(entityId);
+    } else if (tab === 'api-docs') {
+      targetPath = '/api-docs';
     }
 
     if (window.location.pathname !== targetPath) {
@@ -510,6 +515,10 @@ const MainApplication: React.FC = () => {
 
         {activeTab === 'architecture' && (
           <SecurityArchitectureView />
+        )}
+
+        {activeTab === 'api-docs' && (
+          <ApiDocsView />
         )}
       </main>
 
