@@ -475,7 +475,7 @@ export const WorkOrdersView: React.FC<WorkOrdersViewProps> = ({
             <button
               onClick={() => setViewMode('table')}
               className={`p-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1 transition-all cursor-pointer ${
-                viewMode === 'table' ? 'bg-slate-900 text-white shadow-xs' : 'text-slate-500 hover:text-slate-900'
+                viewMode === 'table' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-500 hover:text-slate-900'
               }`}
             >
               <List className="w-4 h-4" />
@@ -484,7 +484,7 @@ export const WorkOrdersView: React.FC<WorkOrdersViewProps> = ({
             <button
               onClick={() => setViewMode('kanban')}
               className={`p-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1 transition-all cursor-pointer ${
-                viewMode === 'kanban' ? 'bg-slate-900 text-white shadow-xs' : 'text-slate-500 hover:text-slate-900'
+                viewMode === 'kanban' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-500 hover:text-slate-900'
               }`}
             >
               <LayoutGrid className="w-4 h-4" />

@@ -524,11 +524,11 @@ const MainApplication: React.FC = () => {
 
       {/* Switch Account / Auth Modal */}
       {showLoginModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="relative w-full max-w-xl">
             <button
               onClick={() => setShowLoginModal(false)}
-              className="absolute -top-10 right-0 text-slate-400 hover:text-white text-xs font-semibold px-2 py-1"
+              className="absolute -top-10 right-0 text-white bg-slate-900/60 hover:bg-slate-900 rounded-lg text-xs font-semibold px-2.5 py-1 transition"
             >
               ✕ Close
             </button>

@@ -433,13 +433,13 @@ export function renderSwaggerHtml(specUrl: string = '/api/v1/openapi.json'): str
     body {
       margin: 0;
       padding: 0;
-      background-color: #0b0f17;
-      color: #e2e8f0;
+      background-color: #ffffff;
+      color: #1e293b;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     .topbar {
-      background-color: #0f172a !important;
-      border-bottom: 1px solid #1e293b;
+      background-color: #ffffff !important;
+      border-bottom: 1px solid #e2e8f0;
       padding: 12px 24px;
       display: flex;
       align-items: center;
@@ -449,7 +449,7 @@ export function renderSwaggerHtml(specUrl: string = '/api/v1/openapi.json'): str
       display: flex;
       align-items: center;
       gap: 12px;
-      color: #fff;
+      color: #0f172a;
       font-weight: 700;
       font-size: 16px;
       text-decoration: none;
@@ -457,9 +457,9 @@ export function renderSwaggerHtml(specUrl: string = '/api/v1/openapi.json'): str
       letter-spacing: 0.05em;
     }
     .topbar-brand span.badge {
-      background: rgba(6, 182, 212, 0.15);
-      color: #22d3ee;
-      border: 1px solid rgba(6, 182, 212, 0.3);
+      background: #eff6ff;
+      color: #2563eb;
+      border: 1px solid #bfdbfe;
       padding: 2px 8px;
       border-radius: 4px;
       font-size: 11px;
@@ -471,56 +471,51 @@ export function renderSwaggerHtml(specUrl: string = '/api/v1/openapi.json'): str
       padding: 20px;
     }
     .swagger-ui .info .title {
-      color: #f8fafc;
+      color: #0f172a;
     }
     .swagger-ui .info p, .swagger-ui .info li {
-      color: #94a3b8;
+      color: #475569;
     }
     .swagger-ui .scheme-container {
-      background: #0f172a;
-      border: 1px solid #1e293b;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
       border-radius: 12px;
-      box-shadow: none;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
       padding: 16px;
       margin-bottom: 24px;
     }
     .swagger-ui .opblock {
-      background: #0f172a !important;
       border-radius: 10px !important;
-      border: 1px solid #1e293b !important;
-      box-shadow: none !important;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04) !important;
       margin-bottom: 12px !important;
-    }
-    .swagger-ui .opblock .opblock-summary {
-      border-color: #1e293b !important;
     }
     .swagger-ui .opblock .opblock-summary-method {
       border-radius: 6px !important;
       font-weight: 700 !important;
     }
     .swagger-ui .opblock-description-wrapper p, .swagger-ui .opblock-external-docs-wrapper p, .swagger-ui .opblock-title_normal p {
-      color: #cbd5e1;
+      color: #334155;
     }
     .swagger-ui table thead tr td, .swagger-ui table thead tr th {
-      color: #94a3b8;
-      border-bottom-color: #1e293b;
+      color: #64748b;
+      border-bottom-color: #e2e8f0;
     }
     .swagger-ui .parameter__name {
-      color: #f1f5f9;
+      color: #0f172a;
     }
     .swagger-ui .parameter__type {
-      color: #06b6d4;
+      color: #0284c7;
     }
     .swagger-ui .response-col_status {
-      color: #f8fafc;
+      color: #0f172a;
     }
     .swagger-ui section.models {
-      border: 1px solid #1e293b;
+      border: 1px solid #e2e8f0;
       border-radius: 12px;
-      background: #0f172a;
+      background: #ffffff;
     }
     .swagger-ui section.models h4 {
-      color: #f8fafc;
+      color: #0f172a;
     }
   </style>
 </head>
@@ -530,8 +525,8 @@ export function renderSwaggerHtml(specUrl: string = '/api/v1/openapi.json'): str
       KEYSTONE <span class="badge">OPENAPI 3.0 SPEC</span>
     </a>
     <div style="display: flex; gap: 12px; align-items: center;">
-      <a href="/api/v1/openapi.json" target="_blank" style="color: #06b6d4; font-size: 12px; text-decoration: none; font-weight: 600;">Download JSON Spec &rarr;</a>
-      <a href="/" style="background: #1e293b; color: #fff; padding: 6px 14px; border-radius: 8px; font-size: 12px; text-decoration: none; font-weight: 600;">Return to App &rarr;</a>
+      <a href="/api/v1/openapi.json" target="_blank" style="color: #2563eb; font-size: 12px; text-decoration: none; font-weight: 600;">Download JSON Spec &rarr;</a>
+      <a href="/" style="background: #f1f5f9; color: #0f172a; border: 1px solid #e2e8f0; padding: 6px 14px; border-radius: 8px; font-size: 12px; text-decoration: none; font-weight: 600;">Return to App &rarr;</a>
     </div>
   </div>
   <div id="swagger-ui"></div>

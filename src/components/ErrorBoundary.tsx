@@ -48,22 +48,22 @@ export class ErrorBoundary extends React.Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-slate-900 text-slate-100 flex items-center justify-center p-6 antialiased">
-          <div className="max-w-md w-full bg-slate-800/90 border border-slate-700/80 rounded-2xl p-6 shadow-2xl backdrop-blur-sm text-center">
-            <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mx-auto mb-4">
+        <div className="min-h-screen bg-slate-50 text-slate-900 flex items-center justify-center p-6 antialiased">
+          <div className="max-w-md w-full bg-white border border-slate-200 rounded-2xl p-6 shadow-xl text-center">
+            <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center mx-auto mb-4">
               <AlertTriangle className="w-6 h-6" />
             </div>
             
-            <h1 className="text-lg font-bold text-white mb-2">
+            <h1 className="text-lg font-bold text-slate-900 mb-2">
               Keystone Operations Engine Recovered
             </h1>
             
-            <p className="text-xs text-slate-400 mb-4 leading-relaxed">
+            <p className="text-xs text-slate-500 mb-4 leading-relaxed">
               A temporary runtime error was intercepted. You can reload the application or reset your session state to restore normal operations.
             </p>
 
             {this.state.error && (
-              <div className="bg-slate-950/80 border border-slate-800 rounded-lg p-3 mb-5 text-left overflow-auto max-h-32 text-[11px] font-mono text-red-400">
+              <div className="bg-rose-50 border border-rose-200 rounded-lg p-3 mb-5 text-left overflow-auto max-h-32 text-[11px] font-mono text-rose-700">
                 {this.state.error.message || 'Unknown runtime error'}
               </div>
             )}
@@ -72,7 +72,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
               <button
                 type="button"
                 onClick={this.handleTryAgain}
-                className="flex-1 px-3 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition cursor-pointer"
+                className="flex-1 px-3 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 shadow-xs transition cursor-pointer"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 Try Again
@@ -81,7 +81,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
               <button
                 type="button"
                 onClick={this.handleReload}
-                className="flex-1 px-3 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition cursor-pointer"
+                className="flex-1 px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 Reload
@@ -90,7 +90,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
               <button
                 type="button"
                 onClick={this.handleResetSession}
-                className="flex-1 px-3 py-2.5 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
+                className="flex-1 px-3 py-2.5 bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 Reset

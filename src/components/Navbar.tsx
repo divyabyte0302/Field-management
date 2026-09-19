@@ -179,8 +179,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex items-center justify-between h-16">
             {/* Brand Identity */}
             <div className="flex items-center space-x-3">
-              <div className="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center text-white shadow-xs">
-                <Building2 className="w-4 h-4 text-blue-400" />
+              <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-xs">
+                <Building2 className="w-4 h-4 text-white" />
               </div>
               <div>
                 <div className="flex items-center space-x-2">
@@ -203,7 +203,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onClick={() => setActiveTab('technician-portal')}
                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 ${
                       activeTab === 'technician-portal'
-                        ? 'bg-slate-900 text-white shadow-xs font-bold'
+                        ? 'bg-blue-600 text-white shadow-xs font-bold'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
@@ -216,7 +216,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onClick={() => setActiveTab('work-orders')}
                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 ${
                       activeTab === 'work-orders'
-                        ? 'bg-slate-900 text-white shadow-xs font-bold'
+                        ? 'bg-blue-600 text-white shadow-xs font-bold'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
@@ -229,7 +229,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onClick={() => setActiveTab('profile')}
                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 ${
                       activeTab === 'profile'
-                        ? 'bg-slate-900 text-white shadow-xs font-bold'
+                        ? 'bg-blue-600 text-white shadow-xs font-bold'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
@@ -247,7 +247,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onClick={() => setActiveTab('customer-portal')}
                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 ${
                       activeTab === 'customer-portal'
-                        ? 'bg-slate-900 text-white shadow-xs font-bold'
+                        ? 'bg-blue-600 text-white shadow-xs font-bold'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
@@ -260,7 +260,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onClick={() => setActiveTab('work-orders')}
                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 ${
                       activeTab === 'work-orders'
-                        ? 'bg-slate-900 text-white shadow-xs font-bold'
+                        ? 'bg-blue-600 text-white shadow-xs font-bold'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
@@ -282,7 +282,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onClick={() => setActiveTab('facilities')}
                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 ${
                       activeTab === 'facilities'
-                        ? 'bg-slate-900 text-white shadow-xs font-bold'
+                        ? 'bg-blue-600 text-white shadow-xs font-bold'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
@@ -301,7 +301,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onClick={() => setActiveTab('dashboard')}
                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 ${
                       activeTab === 'dashboard'
-                        ? 'bg-slate-900 text-white shadow-xs font-bold'
+                        ? 'bg-blue-600 text-white shadow-xs font-bold'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
@@ -314,7 +314,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onClick={() => setActiveTab('work-orders')}
                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 ${
                       activeTab === 'work-orders'
-                        ? 'bg-slate-900 text-white shadow-xs font-bold'
+                        ? 'bg-blue-600 text-white shadow-xs font-bold'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
@@ -327,7 +327,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onClick={() => setActiveTab('dispatch-board')}
                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 ${
                       activeTab === 'dispatch-board'
-                        ? 'bg-slate-900 text-white shadow-xs font-bold'
+                        ? 'bg-blue-600 text-white shadow-xs font-bold'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
@@ -340,7 +340,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onClick={() => setActiveTab('service-requests')}
                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 ${
                       activeTab === 'service-requests'
-                        ? 'bg-slate-900 text-white shadow-xs font-bold'
+                        ? 'bg-blue-600 text-white shadow-xs font-bold'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
@@ -355,7 +355,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onClick={() => { setShowOperationsMenu(!showOperationsMenu); setShowSystemMenu(false); }}
                       className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 ${
                         ['facilities', 'assets', 'inventory', 'technicians'].includes(activeTab)
-                          ? 'bg-slate-900 text-white shadow-xs font-bold'
+                          ? 'bg-blue-600 text-white shadow-xs font-bold'
                           : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                       }`}
                     >
@@ -416,7 +416,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onClick={() => { setShowSystemMenu(!showSystemMenu); setShowOperationsMenu(false); }}
                       className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 ${
                         ['sla-dashboard', 'audit-logs', 'users'].includes(activeTab)
-                          ? 'bg-slate-900 text-white shadow-xs font-bold'
+                          ? 'bg-blue-600 text-white shadow-xs font-bold'
                           : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                       }`}
                     >
@@ -784,7 +784,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   onClick={() => { setActiveTab('technician-portal'); setShowMobileMenu(false); }}
                   className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold ${
-                    activeTab === 'technician-portal' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-50'
+                    activeTab === 'technician-portal' ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-700 hover:bg-slate-50'
                   }`}
                 >
                   <CheckSquare className="w-4 h-4 text-amber-500" />
@@ -793,7 +793,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   onClick={() => { setActiveTab('work-orders'); setShowMobileMenu(false); }}
                   className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold ${
-                    activeTab === 'work-orders' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-50'
+                    activeTab === 'work-orders' ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-700 hover:bg-slate-50'
                   }`}
                 >
                   <Wrench className="w-4 h-4 text-blue-600" />
@@ -802,7 +802,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   onClick={() => { setActiveTab('profile'); setShowMobileMenu(false); }}
                   className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold ${
-                    activeTab === 'profile' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-50'
+                    activeTab === 'profile' ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-700 hover:bg-slate-50'
                   }`}
                 >
                   <User className="w-4 h-4 text-slate-500" />
@@ -820,7 +820,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   onClick={() => { setActiveTab('customer-portal'); setShowMobileMenu(false); }}
                   className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold ${
-                    activeTab === 'customer-portal' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-50'
+                    activeTab === 'customer-portal' ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-700 hover:bg-slate-50'
                   }`}
                 >
                   <FileText className="w-4 h-4 text-emerald-600" />
@@ -829,7 +829,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   onClick={() => { setActiveTab('work-orders'); setShowMobileMenu(false); }}
                   className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold ${
-                    activeTab === 'work-orders' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-50'
+                    activeTab === 'work-orders' ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-700 hover:bg-slate-50'
                   }`}
                 >
                   <Wrench className="w-4 h-4 text-blue-600" />
@@ -838,7 +838,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   onClick={() => { setActiveTab('facilities'); setShowMobileMenu(false); }}
                   className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold ${
-                    activeTab === 'facilities' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-50'
+                    activeTab === 'facilities' ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-700 hover:bg-slate-50'
                   }`}
                 >
                   <Building className="w-4 h-4 text-blue-600" />
@@ -858,7 +858,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     onClick={() => { setActiveTab('dashboard'); setShowMobileMenu(false); }}
                     className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold ${
-                      activeTab === 'dashboard' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-50'
+                      activeTab === 'dashboard' ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-700 hover:bg-slate-50'
                     }`}
                   >
                     <Activity className="w-4 h-4 text-blue-600" />
@@ -867,7 +867,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     onClick={() => { setActiveTab('work-orders'); setShowMobileMenu(false); }}
                     className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold ${
-                      activeTab === 'work-orders' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-50'
+                      activeTab === 'work-orders' ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-700 hover:bg-slate-50'
                     }`}
                   >
                     <Wrench className="w-4 h-4 text-blue-600" />
@@ -876,7 +876,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     onClick={() => { setActiveTab('dispatch-board'); setShowMobileMenu(false); }}
                     className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold ${
-                      activeTab === 'dispatch-board' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-50'
+                      activeTab === 'dispatch-board' ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-700 hover:bg-slate-50'
                     }`}
                   >
                     <Users className="w-4 h-4 text-blue-600" />
@@ -885,7 +885,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     onClick={() => { setActiveTab('service-requests'); setShowMobileMenu(false); }}
                     className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold ${
-                      activeTab === 'service-requests' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-50'
+                      activeTab === 'service-requests' ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-700 hover:bg-slate-50'
                     }`}
                   >
                     <FileText className="w-4 h-4 text-emerald-600" />
@@ -901,7 +901,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     onClick={() => { setActiveTab('facilities'); setShowMobileMenu(false); }}
                     className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold ${
-                      activeTab === 'facilities' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-50'
+                      activeTab === 'facilities' ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-700 hover:bg-slate-50'
                     }`}
                   >
                     <Building className="w-4 h-4 text-blue-600" />
@@ -910,7 +910,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     onClick={() => { setActiveTab('assets'); setShowMobileMenu(false); }}
                     className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold ${
-                      activeTab === 'assets' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-50'
+                      activeTab === 'assets' ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-700 hover:bg-slate-50'
                     }`}
                   >
                     <Layers className="w-4 h-4 text-blue-600" />
@@ -919,7 +919,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     onClick={() => { setActiveTab('inventory'); setShowMobileMenu(false); }}
                     className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold ${
-                      activeTab === 'inventory' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-50'
+                      activeTab === 'inventory' ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-700 hover:bg-slate-50'
                     }`}
                   >
                     <Boxes className="w-4 h-4 text-blue-600" />
@@ -928,7 +928,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     onClick={() => { setActiveTab('technicians'); setShowMobileMenu(false); }}
                     className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold ${
-                      activeTab === 'technicians' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-50'
+                      activeTab === 'technicians' ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-700 hover:bg-slate-50'
                     }`}
                   >
                     <HardHat className="w-4 h-4 text-blue-600" />
@@ -944,7 +944,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     onClick={() => { setActiveTab('sla-dashboard'); setShowMobileMenu(false); }}
                     className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold ${
-                      activeTab === 'sla-dashboard' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-50'
+                      activeTab === 'sla-dashboard' ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-700 hover:bg-slate-50'
                     }`}
                   >
                     <ShieldAlert className="w-4 h-4 text-amber-500" />
@@ -953,7 +953,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     onClick={() => { setActiveTab('audit-logs'); setShowMobileMenu(false); }}
                     className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold ${
-                      activeTab === 'audit-logs' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-50'
+                      activeTab === 'audit-logs' ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-700 hover:bg-slate-50'
                     }`}
                   >
                     <History className="w-4 h-4 text-blue-600" />
@@ -963,7 +963,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <button
                       onClick={() => { setActiveTab('users'); setShowMobileMenu(false); }}
                       className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold ${
-                        activeTab === 'users' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-50'
+                        activeTab === 'users' ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-700 hover:bg-slate-50'
                       }`}
                     >
                       <KeyRound className="w-4 h-4 text-indigo-600" />
@@ -973,7 +973,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     onClick={() => { setActiveTab('api-docs'); setShowMobileMenu(false); }}
                     className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold ${
-                      activeTab === 'api-docs' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-50'
+                      activeTab === 'api-docs' ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-700 hover:bg-slate-50'
                     }`}
                   >
                     <BookOpen className="w-4 h-4 text-emerald-600" />
@@ -987,7 +987,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 onClick={() => { setActiveTab('profile'); setShowMobileMenu(false); }}
                 className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold ${
-                  activeTab === 'profile' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-50'
+                  activeTab === 'profile' ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-700 hover:bg-slate-50'
                 }`}
               >
                 <User className="w-4 h-4" />

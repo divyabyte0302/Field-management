@@ -26,15 +26,15 @@ interface ChartsProps {
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-slate-900 border border-slate-700 p-2.5 rounded-lg shadow-xl text-xs text-slate-200">
-        <p className="font-bold text-white mb-1">{label || payload[0]?.name}</p>
+      <div className="bg-white border border-slate-200 p-2.5 rounded-lg shadow-lg text-xs text-slate-700">
+        <p className="font-bold text-slate-900 mb-1">{label || payload[0]?.name}</p>
         {payload.map((p: any, idx: number) => (
           <div key={idx} className="flex items-center justify-between gap-3 text-[11px]">
             <span className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color || p.fill }} />
-              <span className="text-slate-400">{p.name}:</span>
+              <span className="text-slate-500">{p.name}:</span>
             </span>
-            <span className="font-mono font-bold text-white">{p.value}</span>
+            <span className="font-mono font-bold text-slate-900">{p.value}</span>
           </div>
         ))}
       </div>
@@ -68,13 +68,13 @@ export const StatusDistributionChart: React.FC<{ data?: DashboardStats['charts']
             nameKey="label"
           >
             {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} stroke="#0f172a" strokeWidth={2} />
+              <Cell key={`cell-${index}`} fill={entry.color} stroke="#ffffff" strokeWidth={2} />
             ))}
           </Pie>
           <Legend
             verticalAlign="bottom"
             height={36}
-            formatter={(value) => <span className="text-[10px] text-slate-600 dark:text-slate-400">{value}</span>}
+            formatter={(value) => <span className="text-[10px] text-slate-600">{value}</span>}
           />
         </PieChart>
       </ResponsiveContainer>
@@ -116,7 +116,7 @@ export const FacilityDistributionChart: React.FC<{ data?: DashboardStats['charts
           <Legend
             verticalAlign="top"
             align="right"
-            formatter={(val) => <span className="text-[10px] text-slate-600 dark:text-slate-400">{val}</span>}
+            formatter={(val) => <span className="text-[10px] text-slate-600">{val}</span>}
           />
           <Bar dataKey="active" name="Active" fill="#3b82f6" stackId="a" radius={[0, 0, 0, 0]} />
           <Bar dataKey="completed" name="Completed" fill="#10b981" stackId="a" radius={[0, 4, 4, 0]} />
@@ -149,7 +149,7 @@ export const OrdersOverTimeChart: React.FC<{ data?: DashboardStats['charts']['or
           <Legend
             verticalAlign="top"
             align="right"
-            formatter={(val) => <span className="text-[10px] text-slate-600 dark:text-slate-400">{val}</span>}
+            formatter={(val) => <span className="text-[10px] text-slate-600">{val}</span>}
           />
           <Area
             type="monotone"
@@ -200,13 +200,13 @@ export const SlaPerformanceChart: React.FC<{ data?: DashboardStats['charts']['sl
             nameKey="name"
           >
             {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} stroke="#0f172a" strokeWidth={2} />
+              <Cell key={`cell-${index}`} fill={entry.color} stroke="#ffffff" strokeWidth={2} />
             ))}
           </Pie>
           <Legend
             verticalAlign="bottom"
             height={36}
-            formatter={(value) => <span className="text-[10px] text-slate-600 dark:text-slate-400">{value}</span>}
+            formatter={(value) => <span className="text-[10px] text-slate-600">{value}</span>}
           />
         </PieChart>
       </ResponsiveContainer>
@@ -227,7 +227,7 @@ export const TechnicianWorkloadChart: React.FC<{ data?: DashboardStats['charts']
           <Legend
             verticalAlign="top"
             align="right"
-            formatter={(val) => <span className="text-[10px] text-slate-600 dark:text-slate-400">{val}</span>}
+            formatter={(val) => <span className="text-[10px] text-slate-600">{val}</span>}
           />
           <Bar dataKey="activeJobs" name="Active Jobs" fill="#0284c7" radius={[4, 4, 0, 0]} />
           <Bar dataKey="completedJobs" name="Completed" fill="#10b981" radius={[4, 4, 0, 0]} />
