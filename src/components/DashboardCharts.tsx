@@ -43,8 +43,15 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-export const StatusDistributionChart: React.FC<{ data: DashboardStats['charts']['statusDistribution'] }> = ({ data }) => {
-  const chartData = data.filter(d => d.count > 0);
+export const StatusDistributionChart: React.FC<{ data?: DashboardStats['charts']['statusDistribution'] }> = ({ data = [] }) => {
+  const chartData = (data || []).filter(d => d.count > 0);
+  if (chartData.length === 0) {
+    return (
+      <div className="h-64 w-full flex items-center justify-center text-xs text-slate-400">
+        No status data available
+      </div>
+    );
+  }
   return (
     <div className="h-64 w-full">
       <ResponsiveContainer width="100%" height="100%">
@@ -75,17 +82,18 @@ export const StatusDistributionChart: React.FC<{ data: DashboardStats['charts'][
   );
 };
 
-export const PriorityDistributionChart: React.FC<{ data: DashboardStats['charts']['priorityDistribution'] }> = ({ data }) => {
+export const PriorityDistributionChart: React.FC<{ data?: DashboardStats['charts']['priorityDistribution'] }> = ({ data = [] }) => {
+  const chartData = data || [];
   return (
     <div className="h-64 w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
+        <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" opacity={0.6} />
           <XAxis dataKey="label" tick={{ fontSize: 10, fill: '#64748b' }} interval={0} angle={-15} textAnchor="end" />
           <YAxis tick={{ fontSize: 10, fill: '#64748b' }} allowDecimals={false} />
           <Tooltip content={<CustomTooltip />} />
           <Bar dataKey="count" name="Work Orders" radius={[4, 4, 0, 0]}>
-            {data.map((entry, index) => (
+            {chartData.map((entry, index) => (
               <Cell key={`bar-${index}`} fill={entry.color} />
             ))}
           </Bar>
@@ -95,11 +103,12 @@ export const PriorityDistributionChart: React.FC<{ data: DashboardStats['charts'
   );
 };
 
-export const FacilityDistributionChart: React.FC<{ data: DashboardStats['charts']['facilityDistribution'] }> = ({ data }) => {
+export const FacilityDistributionChart: React.FC<{ data?: DashboardStats['charts']['facilityDistribution'] }> = ({ data = [] }) => {
+  const chartData = data || [];
   return (
     <div className="h-64 w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} layout="vertical" margin={{ top: 10, right: 20, left: 30, bottom: 5 }}>
+        <BarChart data={chartData} layout="vertical" margin={{ top: 10, right: 20, left: 30, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" opacity={0.6} />
           <XAxis type="number" tick={{ fontSize: 10, fill: '#64748b' }} allowDecimals={false} />
           <YAxis dataKey="facilityName" type="category" tick={{ fontSize: 10, fill: '#64748b' }} width={80} />
@@ -117,11 +126,12 @@ export const FacilityDistributionChart: React.FC<{ data: DashboardStats['charts'
   );
 };
 
-export const OrdersOverTimeChart: React.FC<{ data: DashboardStats['charts']['ordersOverTime'] }> = ({ data }) => {
+export const OrdersOverTimeChart: React.FC<{ data?: DashboardStats['charts']['ordersOverTime'] }> = ({ data = [] }) => {
+  const chartData = data || [];
   return (
     <div className="h-64 w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={data} margin={{ top: 10, right: 15, left: -20, bottom: 5 }}>
+        <AreaChart data={chartData} margin={{ top: 10, right: 15, left: -20, bottom: 5 }}>
           <defs>
             <linearGradient id="createdGrad" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#0284c7" stopOpacity={0.4} />
@@ -165,14 +175,22 @@ export const OrdersOverTimeChart: React.FC<{ data: DashboardStats['charts']['ord
   );
 };
 
-export const SlaPerformanceChart: React.FC<{ data: DashboardStats['charts']['slaPerformance'] }> = ({ data }) => {
+export const SlaPerformanceChart: React.FC<{ data?: DashboardStats['charts']['slaPerformance'] }> = ({ data = [] }) => {
+  const chartData = data || [];
+  if (chartData.length === 0) {
+    return (
+      <div className="h-64 w-full flex items-center justify-center text-xs text-slate-400">
+        No SLA data available
+      </div>
+    );
+  }
   return (
     <div className="h-64 w-full">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Tooltip content={<CustomTooltip />} />
           <Pie
-            data={data}
+            data={chartData}
             cx="50%"
             cy="50%"
             innerRadius={45}
@@ -181,7 +199,7 @@ export const SlaPerformanceChart: React.FC<{ data: DashboardStats['charts']['sla
             dataKey="count"
             nameKey="name"
           >
-            {data.map((entry, index) => (
+            {chartData.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.color} stroke="#0f172a" strokeWidth={2} />
             ))}
           </Pie>
@@ -196,11 +214,12 @@ export const SlaPerformanceChart: React.FC<{ data: DashboardStats['charts']['sla
   );
 };
 
-export const TechnicianWorkloadChart: React.FC<{ data: DashboardStats['charts']['technicianWorkload'] }> = ({ data }) => {
+export const TechnicianWorkloadChart: React.FC<{ data?: DashboardStats['charts']['technicianWorkload'] }> = ({ data = [] }) => {
+  const chartData = data || [];
   return (
     <div className="h-64 w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 5 }}>
+        <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" opacity={0.6} />
           <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#64748b' }} />
           <YAxis tick={{ fontSize: 10, fill: '#64748b' }} allowDecimals={false} />

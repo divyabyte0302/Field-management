@@ -1,6 +1,6 @@
 import { 
   User, WorkOrder, DashboardStats, Technician, Facility, Asset, 
-  ServiceRequest, Part, SlaPolicy, AppNotification, Customer, WorkOrderStatus, RoleName 
+  ServiceRequest, Part, SlaPolicy, AppNotification, Customer, WorkOrderStatus, RoleName, Priority 
 } from '../types';
 
 // In-memory / LocalStorage client fallback store
@@ -852,6 +852,121 @@ export function getFallbackNotifications(): AppNotification[] {
     if (raw) return JSON.parse(raw);
   } catch (e) {}
   return FALLBACK_SEED_NOTIFICATIONS;
+}
+
+export function clientFallbackGetDashboardStats(): DashboardStats {
+  const orders = getFallbackWorkOrders();
+  const totalOrders = orders.length;
+  const openOrders = orders.filter(w => !['COMPLETED', 'CLOSED', 'CANCELLED'].includes(w.status)).length;
+  const inProgressOrders = orders.filter(w => w.status === 'IN_PROGRESS').length;
+  const completedOrders = orders.filter(w => ['COMPLETED', 'CLOSED'].includes(w.status)).length;
+  const overdueOrders = orders.filter(w => w.slaStatus === 'BREACHED' || (w.slaResolutionRemainingMinutes !== undefined && w.slaResolutionRemainingMinutes < 0)).length;
+  const slaAtRiskCount = orders.filter(w => w.slaStatus === 'AT_RISK' || (w.slaResolutionRemainingMinutes !== undefined && w.slaResolutionRemainingMinutes > 0 && w.slaResolutionRemainingMinutes <= 60)).length;
+  const slaBreachedCount = orders.filter(w => w.slaStatus === 'BREACHED').length;
+  const unassignedOrders = orders.filter(w => !w.assignedTechnicianId && !['COMPLETED', 'CLOSED', 'CANCELLED'].includes(w.status)).length;
+  const compliantCount = orders.filter(w => w.slaStatus === 'ON_TRACK' || w.slaStatus === 'COMPLETED' || (!w.slaStatus && w.status !== 'CANCELLED')).length;
+  const slaComplianceRate = totalOrders > 0 ? Math.round((compliantCount / totalOrders) * 100) : 100;
+
+  const statusCounts: Record<WorkOrderStatus, number> = {
+    NEW: orders.filter(w => w.status === 'NEW').length,
+    ASSIGNED: orders.filter(w => w.status === 'ASSIGNED').length,
+    IN_PROGRESS: orders.filter(w => w.status === 'IN_PROGRESS').length,
+    ON_HOLD: orders.filter(w => w.status === 'ON_HOLD').length,
+    COMPLETED: orders.filter(w => w.status === 'COMPLETED').length,
+    CLOSED: orders.filter(w => w.status === 'CLOSED').length,
+    CANCELLED: orders.filter(w => w.status === 'CANCELLED').length,
+  };
+
+  const priorityCounts: Record<Priority, number> = {
+    CRITICAL: orders.filter(w => w.priority === 'CRITICAL').length,
+    HIGH: orders.filter(w => w.priority === 'HIGH').length,
+    MEDIUM: orders.filter(w => w.priority === 'MEDIUM').length,
+    LOW: orders.filter(w => w.priority === 'LOW').length,
+  };
+
+  const techStats = {
+    total: FALLBACK_SEED_TECHNICIANS.length,
+    available: FALLBACK_SEED_TECHNICIANS.filter(t => t.status === 'AVAILABLE').length,
+    onSite: FALLBACK_SEED_TECHNICIANS.filter(t => t.status === 'ON_SITE').length,
+    inTransit: FALLBACK_SEED_TECHNICIANS.filter(t => t.status === 'IN_TRANSIT').length,
+    offDuty: FALLBACK_SEED_TECHNICIANS.filter(t => t.status === 'OFF_DUTY').length,
+  };
+
+  const statusDistribution = [
+    { status: 'NEW' as WorkOrderStatus, label: '1. New', count: statusCounts.NEW, color: '#94a3b8' },
+    { status: 'ASSIGNED' as WorkOrderStatus, label: '2. Assigned', count: statusCounts.ASSIGNED, color: '#3b82f6' },
+    { status: 'IN_PROGRESS' as WorkOrderStatus, label: '3. In Progress', count: statusCounts.IN_PROGRESS, color: '#f59e0b' },
+    { status: 'ON_HOLD' as WorkOrderStatus, label: '4. On Hold', count: statusCounts.ON_HOLD, color: '#ea580c' },
+    { status: 'COMPLETED' as WorkOrderStatus, label: '5. Completed', count: statusCounts.COMPLETED, color: '#10b981' },
+    { status: 'CLOSED' as WorkOrderStatus, label: '6. Closed', count: statusCounts.CLOSED, color: '#475569' },
+    { status: 'CANCELLED' as WorkOrderStatus, label: '7. Cancelled', count: statusCounts.CANCELLED, color: '#f43f5e' },
+  ];
+
+  const priorityDistribution = [
+    { priority: 'CRITICAL' as Priority, label: 'Critical', count: priorityCounts.CRITICAL, color: '#ef4444' },
+    { priority: 'HIGH' as Priority, label: 'High', count: priorityCounts.HIGH, color: '#f59e0b' },
+    { priority: 'MEDIUM' as Priority, label: 'Medium', count: priorityCounts.MEDIUM, color: '#3b82f6' },
+    { priority: 'LOW' as Priority, label: 'Low', count: priorityCounts.LOW, color: '#94a3b8' },
+  ];
+
+  const slaPerformance = [
+    { name: 'Compliant & On Track', count: compliantCount, percentage: totalOrders > 0 ? Math.round((compliantCount / totalOrders) * 100) : 100, color: '#10b981' },
+    { name: 'SLA At Risk (<60m)', count: slaAtRiskCount, percentage: totalOrders > 0 ? Math.round((slaAtRiskCount / totalOrders) * 100) : 0, color: '#f59e0b' },
+    { name: 'Breached Threshold', count: slaBreachedCount, percentage: totalOrders > 0 ? Math.round((slaBreachedCount / totalOrders) * 100) : 0, color: '#ef4444' },
+  ];
+
+  const ordersOverTime = [
+    { date: 'Mon', created: 3, completed: 2 },
+    { date: 'Tue', created: 5, completed: 4 },
+    { date: 'Wed', created: 2, completed: 3 },
+    { date: 'Thu', created: 6, completed: 5 },
+    { date: 'Fri', created: 4, completed: 4 },
+    { date: 'Sat', created: 1, completed: 1 },
+    { date: 'Sun', created: 2, completed: 2 },
+  ];
+
+  const technicianWorkload = FALLBACK_SEED_TECHNICIANS.map(t => {
+    const assigned = orders.filter(w => w.assignedTechnicianId === t.id);
+    return {
+      name: t.name.split(' ')[0],
+      activeJobs: assigned.filter(w => !['COMPLETED', 'CLOSED', 'CANCELLED'].includes(w.status)).length,
+      completedJobs: assigned.filter(w => ['COMPLETED', 'CLOSED'].includes(w.status)).length,
+      hoursLogged: Number(assigned.reduce((acc, w) => acc + (w.actualDurationHours || 0), 0).toFixed(1)),
+      status: t.status,
+    };
+  });
+
+  return {
+    totalOrders,
+    openOrders,
+    inProgressOrders,
+    completedOrders,
+    overdueOrders,
+    slaAtRiskCount,
+    slaBreachedCount,
+    unassignedOrders,
+    availableTechnicians: techStats.available,
+    lowInventoryCount: FALLBACK_SEED_PARTS.filter(p => p.stockOnHand <= (p.reorderLevel || 5)).length,
+    slaComplianceRate,
+    technicianUtilizationRate: 78,
+    openServiceRequests: FALLBACK_SEED_SERVICE_REQUESTS.filter(s => s.status === 'PENDING_REVIEW').length,
+    totalLaborHours: 32.5,
+    totalPartsCost: 2850,
+    totalLaborCost: 4875,
+    totalServiceCost: 7725,
+    activeOrders: openOrders,
+    criticalOrders: priorityCounts.CRITICAL,
+    statusCounts,
+    priorityCounts,
+    techStats,
+    charts: {
+      statusDistribution,
+      priorityDistribution,
+      ordersOverTime,
+      slaPerformance,
+      technicianWorkload,
+    }
+  };
 }
 
 export { DEMO_USERS };

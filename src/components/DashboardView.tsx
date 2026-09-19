@@ -177,7 +177,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
             <div className="mt-2">
               <span className="text-2xl font-bold text-amber-600 font-mono">
-                {stats.slaAtRiskCount ?? stats.charts.slaPerformance?.find(s => s.name.includes('Risk'))?.count ?? 0}
+                {stats.slaAtRiskCount ?? stats.charts?.slaPerformance?.find(s => s.name.includes('Risk'))?.count ?? 0}
               </span>
               <span className="text-[11px] text-slate-400 block mt-0.5">&lt;60m to resolution SLA</span>
             </div>
@@ -191,7 +191,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
             <div className="mt-2">
               <span className="text-2xl font-bold text-red-600 font-mono">
-                {stats.slaBreachedCount ?? stats.charts.slaPerformance?.find(s => s.name.includes('Breached'))?.count ?? 0}
+                {stats.slaBreachedCount ?? stats.charts?.slaPerformance?.find(s => s.name.includes('Breached'))?.count ?? 0}
               </span>
               <span className="text-[11px] text-slate-400 block mt-0.5">Response or resolution breached</span>
             </div>
@@ -263,7 +263,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </h3>
               <p className="text-[11px] text-slate-500">Breakdown across FSM lifecycle stages</p>
             </div>
-            <StatusDistributionChart data={stats.charts.statusDistribution} />
+            <StatusDistributionChart data={stats.charts?.statusDistribution || []} />
           </div>
 
           {/* Chart 2: Work Orders by Priority */}
@@ -274,7 +274,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </h3>
               <p className="text-[11px] text-slate-500">Critical vs High vs Medium vs Low severity</p>
             </div>
-            <PriorityDistributionChart data={stats.charts.priorityDistribution} />
+            <PriorityDistributionChart data={stats.charts?.priorityDistribution || []} />
           </div>
 
           {/* Chart 3: Work Orders Over Time */}
@@ -285,7 +285,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </h3>
               <p className="text-[11px] text-slate-500">Daily creation vs completion velocity</p>
             </div>
-            <OrdersOverTimeChart data={stats.charts.ordersOverTime} />
+            <OrdersOverTimeChart data={stats.charts?.ordersOverTime || []} />
           </div>
 
           {/* Chart 4: SLA Performance */}
@@ -296,7 +296,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </h3>
               <p className="text-[11px] text-slate-500">Compliant vs At Risk (&lt;60m) vs Breached</p>
             </div>
-            <SlaPerformanceChart data={stats.charts.slaPerformance} />
+            <SlaPerformanceChart data={stats.charts?.slaPerformance || []} />
           </div>
         </div>
       </div>
@@ -321,7 +321,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-9 gap-2.5">
           {stages.map((st) => {
-            const count = stats.statusCounts[st.key] || 0;
+            const count = stats.statusCounts?.[st.key] ?? 0;
             return (
               <button
                 key={st.key}
@@ -407,10 +407,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           
           <div className="space-y-2">
             {[
-              { label: 'Critical (Immediate Dispatch)', count: stats.priorityCounts.CRITICAL, color: 'bg-rose-500' },
-              { label: 'High Priority (8h Resolution)', count: stats.priorityCounts.HIGH, color: 'bg-amber-500' },
-              { label: 'Medium (Commercial Standard)', count: stats.priorityCounts.MEDIUM, color: 'bg-blue-500' },
-              { label: 'Low (Scheduled Routine)', count: stats.priorityCounts.LOW, color: 'bg-slate-400' },
+              { label: 'Critical (Immediate Dispatch)', count: stats.priorityCounts?.CRITICAL ?? 0, color: 'bg-rose-500' },
+              { label: 'High Priority (8h Resolution)', count: stats.priorityCounts?.HIGH ?? 0, color: 'bg-amber-500' },
+              { label: 'Medium (Commercial Standard)', count: stats.priorityCounts?.MEDIUM ?? 0, color: 'bg-blue-500' },
+              { label: 'Low (Scheduled Routine)', count: stats.priorityCounts?.LOW ?? 0, color: 'bg-slate-400' },
             ].map((p) => (
               <div key={p.label} className="flex items-center justify-between text-xs py-1">
                 <div className="flex items-center space-x-2">
@@ -427,15 +427,15 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="space-y-2 text-xs">
               <div className="flex justify-between py-1.5 border-b border-slate-50">
                 <span className="text-slate-600">Available Technicians</span>
-                <span className="text-emerald-700 font-bold font-mono">{stats.techStats.available} ready</span>
+                <span className="text-emerald-700 font-bold font-mono">{stats.techStats?.available ?? 0} ready</span>
               </div>
               <div className="flex justify-between py-1.5 border-b border-slate-50">
                 <span className="text-slate-600">Active On Site</span>
-                <span className="text-amber-700 font-bold font-mono">{stats.techStats.onSite} on site</span>
+                <span className="text-amber-700 font-bold font-mono">{stats.techStats?.onSite ?? 0} on site</span>
               </div>
               <div className="flex justify-between py-1.5">
                 <span className="text-slate-600">In Transit (Mobile)</span>
-                <span className="text-blue-700 font-bold font-mono">{stats.techStats.inTransit} en route</span>
+                <span className="text-blue-700 font-bold font-mono">{stats.techStats?.inTransit ?? 0} en route</span>
               </div>
             </div>
 

@@ -16,6 +16,7 @@ import {
   getFallbackSlaPolicies,
   getFallbackServiceRequests,
   getFallbackNotifications,
+  clientFallbackGetDashboardStats,
   DEMO_USERS
 } from './clientFallbackService';
 
@@ -251,16 +252,7 @@ export const api = {
     try {
       return await request<DashboardStats>('/v1/dashboard/stats');
     } catch (err: any) {
-      const orders = getFallbackWorkOrders();
-      return {
-        totalWorkOrders: orders.length,
-        activeWorkOrders: orders.filter(w => !['COMPLETED', 'CLOSED', 'CANCELLED'].includes(w.status)).length,
-        slaBreachedOrders: orders.filter(w => w.slaStatus === 'BREACHED').length,
-        slaAtRiskOrders: orders.filter(w => w.slaStatus === 'AT_RISK').length,
-        slaComplianceRate: 94.2,
-        techniciansOnDuty: 4,
-        openCriticalOrders: orders.filter(w => w.priority === 'CRITICAL' && !['COMPLETED', 'CLOSED', 'CANCELLED'].includes(w.status)).length,
-      };
+      return clientFallbackGetDashboardStats();
     }
   },
 

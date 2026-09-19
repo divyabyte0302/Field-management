@@ -30,18 +30,19 @@ export class ErrorBoundary extends React.Component<Props, State> {
     this.setState({ error, errorInfo });
   }
 
+  private handleTryAgain = () => {
+    this.setState({ hasError: false, error: null, errorInfo: null });
+  };
+
   private handleReload = () => {
     window.location.reload();
   };
 
   private handleResetSession = () => {
     try {
-      localStorage.removeItem('keystone_token');
-      localStorage.removeItem('keystone_refresh_token');
-      localStorage.removeItem('keystone_fallback_user');
-      localStorage.removeItem('keystone_work_orders');
+      localStorage.clear();
     } catch (e) {}
-    window.location.href = '/';
+    window.location.href = window.location.origin;
   };
 
   public render() {
@@ -67,23 +68,32 @@ export class ErrorBoundary extends React.Component<Props, State> {
               </div>
             )}
 
-            <div className="flex flex-col sm:flex-row gap-2.5">
+            <div className="flex flex-col sm:flex-row gap-2">
+              <button
+                type="button"
+                onClick={this.handleTryAgain}
+                className="flex-1 px-3 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition cursor-pointer"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+                Try Again
+              </button>
+
               <button
                 type="button"
                 onClick={this.handleReload}
-                className="flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition cursor-pointer"
+                className="flex-1 px-3 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition cursor-pointer"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
-                Reload App
+                Reload
               </button>
               
               <button
                 type="button"
                 onClick={this.handleResetSession}
-                className="flex-1 px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
+                className="flex-1 px-3 py-2.5 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
-                Reset Session
+                Reset
               </button>
             </div>
           </div>
