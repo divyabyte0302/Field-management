@@ -134,11 +134,13 @@ app.use(express.json());
 
 // Normalize URL prefix for serverless environments (e.g. Vercel)
 app.use((req, res, next) => {
-  const matchedPath = (req.headers['x-matched-path'] || req.headers['x-vercel-matched-path'] || req.headers['x-forwarded-uri'] || '') as string;
-  if (matchedPath && matchedPath.startsWith('/api')) {
-    req.url = matchedPath;
-  } else if (!req.url.startsWith('/api') && !req.url.startsWith('/swagger') && !req.url.startsWith('/docs') && !req.url.startsWith('/api-docs')) {
-    req.url = '/api' + (req.url.startsWith('/') ? req.url : '/' + req.url);
+  if (process.env.VERCEL) {
+    const matchedPath = (req.headers['x-matched-path'] || req.headers['x-vercel-matched-path'] || req.headers['x-forwarded-uri'] || '') as string;
+    if (matchedPath && matchedPath.startsWith('/api')) {
+      req.url = matchedPath;
+    } else if (!req.url.startsWith('/api') && !req.url.startsWith('/swagger') && !req.url.startsWith('/docs') && !req.url.startsWith('/api-docs')) {
+      req.url = '/api' + (req.url.startsWith('/') ? req.url : '/' + req.url);
+    }
   }
   next();
 });

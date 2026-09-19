@@ -112,6 +112,7 @@ export interface Asset {
   organizationId: string;
   facilityId: string;
   tagNumber: string;
+  assetTag?: string;
   name: string;
   category: string;
   model: string;
@@ -261,6 +262,13 @@ export interface WorkOrder {
   slaStatus?: SlaStatus;
   slaRemainingMinutes?: number;
   slaOverdueDurationMinutes?: number;
+  slaResolutionRemainingMinutes?: number;
+  slaResolutionOverdueMinutes?: number;
+  slaResponseTargetMinutes?: number;
+  slaResolutionTargetMinutes?: number;
+  slaRespondedAt?: string;
+  overdueDurationFormatted?: string;
+  remainingDurationFormatted?: string;
   dueDate?: string;
   respondedAt?: string;
   completedAt?: string;
@@ -271,8 +279,11 @@ export interface WorkOrder {
   totalLaborHours?: number;
   billableLaborHours?: number;
   totalLaborCost?: number;
+  laborCost?: number;
   totalPartsCost?: number;
+  partsCost?: number;
   totalPartsPrice?: number;
+  totalPrice?: number;
   totalCost?: number;
   resolutionNotes?: string;
   holdReason?: string;
@@ -348,6 +359,8 @@ export interface FacilityInventory {
   unitCost: number;
   unitPrice: number;
   supplier: string;
+  reorderPoint?: number;
+  unitOfMeasure?: string;
   lastRestockedAt?: string;
   updatedAt: string;
 }
@@ -373,15 +386,20 @@ export interface InventoryHistory {
 
 export interface SlaDashboardStats {
   complianceRate: number;
+  compliancePercentage?: number;
   totalOrders: number;
   breachedCount: number;
   atRiskCount: number;
   onTrackCount: number;
   completedOnTimeCount: number;
   averageResponseMinutes: number;
+  averageResponseTimeMinutes?: number;
   averageResolutionMinutes: number;
+  averageResolutionTimeMinutes?: number;
   responseSlaComplianceRate: number;
+  responseCompliantPercentage?: number;
   resolutionSlaComplianceRate: number;
+  resolutionCompliantPercentage?: number;
   complianceByPriority: Record<Priority, { total: number; compliant: number; breached: number; rate: number }>;
   complianceByFacility: Record<string, { facilityName: string; total: number; compliant: number; breached: number; rate: number }>;
 }

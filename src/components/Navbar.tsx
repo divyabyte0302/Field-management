@@ -6,7 +6,8 @@ import {
   RefreshCw, ChevronDown, CheckSquare, Shield,
   ShieldAlert, Boxes, Clock, Bell, CheckCheck,
   AlertTriangle, ArrowRight, ExternalLink, Menu, X,
-  BarChart3, Building, HardHat, Code2, BookOpen
+  BarChart3, Building, HardHat, Code2, BookOpen,
+  History
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { RoleName, AppNotification } from '../types';

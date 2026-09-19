@@ -375,6 +375,7 @@ const MainApplication: React.FC = () => {
           <RoleGuard allowedRoles={['SUPER_ADMIN', 'ADMIN', 'DISPATCHER']}>
             <SlaDashboardView
               facilities={facilities}
+              currentRole={activeRole || 'DISPATCHER'}
               onSelectWorkOrder={(order) => {
                 setSelectedOrder(order);
                 setActiveTab('work-orders');
@@ -431,6 +432,8 @@ const MainApplication: React.FC = () => {
         {activeTab === 'facilities' && (
           <RoleGuard allowedRoles={['SUPER_ADMIN', 'ADMIN', 'DISPATCHER']}>
             <FacilitiesAssetsView
+              facilities={facilities}
+              assets={assets}
               selectedFacilityId={selectedFacilityId}
               selectedAssetId={selectedAssetId}
               onSelectWorkOrder={(orderId) => {
@@ -447,7 +450,9 @@ const MainApplication: React.FC = () => {
         {activeTab === 'technicians' && (
           <RoleGuard allowedRoles={['SUPER_ADMIN', 'ADMIN', 'DISPATCHER']}>
             <TechniciansDirectoryView
-              selectedTechnicianId={selectedTechnicianId}
+              technicians={technicians}
+              workOrders={workOrders}
+              selectedTechId={selectedTechnicianId}
               onSelectWorkOrder={(orderId) => {
                 const target = workOrders.find(w => w.id === orderId);
                 if (target) setSelectedOrder(target);
