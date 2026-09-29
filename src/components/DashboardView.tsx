@@ -51,25 +51,18 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   return (
     <div id="admin-dashboard-container" className="space-y-6">
-      {/* Top Header & Operational Banner */}
+      {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-50 text-blue-700 border border-blue-200 font-bold uppercase">
               OPERATIONAL COMMAND
             </span>
-            <span className="text-xs text-slate-400 font-mono">• Production Real-Time Telemetry</span>
           </div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Facility Maintenance & Dispatch Operations</h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            Real-time commercial real estate telemetry, SLA response monitoring, technician utilization, and costing metrics.
+            Overview of commercial facilities, SLA response monitoring, technician utilization, and work order operations.
           </p>
-        </div>
-        <div className="flex items-center space-x-2">
-          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span>
-            PostgreSQL & FSM Engine Live
-          </span>
         </div>
       </div>
 

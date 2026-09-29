@@ -78,8 +78,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   useEffect(() => {
     fetchNotifications();
-    const interval = setInterval(fetchNotifications, 20000);
-    return () => clearInterval(interval);
   }, [activeRole]);
 
   const handleMarkAsRead = async (id: string, e?: React.MouseEvent) => {
@@ -505,7 +503,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   {unreadCount > 0 && (
                     <span
                       id="badge-unread-notifications-count"
-                      className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center border-2 border-white animate-pulse"
+                      className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center border-2 border-white"
                     >
                       {unreadCount > 99 ? '99+' : unreadCount}
                     </span>

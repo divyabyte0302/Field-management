@@ -19,6 +19,7 @@ import { TechniciansDirectoryView } from './components/TechniciansDirectoryView'
 import { CustomersDirectoryView } from './components/CustomersDirectoryView';
 import { ReportsAnalyticsView } from './components/ReportsAnalyticsView';
 import { NotificationsCenterView } from './components/NotificationsCenterView';
+import { AuditLogsView } from './components/AuditLogsView';
 import { UserProfileView } from './components/UserProfileView';
 import { RoleGuard } from './components/RoleGuard';
 import { api } from './services/api';
@@ -116,6 +117,8 @@ const MainApplication: React.FC = () => {
       setActiveTab('profile');
     } else if (path.startsWith('/users')) {
       setActiveTab('users');
+    } else if (path.startsWith('/audit-logs')) {
+      setActiveTab('audit-logs');
     } else if (path.startsWith('/architecture') || path.startsWith('/security')) {
       setActiveTab('architecture');
     } else if (path.startsWith('/api-docs') || path.startsWith('/swagger') || path.startsWith('/docs')) {
@@ -510,6 +513,16 @@ const MainApplication: React.FC = () => {
         {activeTab === 'users' && (
           <RoleGuard allowedRoles={['SUPER_ADMIN', 'ADMIN']}>
             <UserManagementView />
+          </RoleGuard>
+        )}
+
+        {activeTab === 'audit-logs' && (
+          <RoleGuard allowedRoles={['SUPER_ADMIN', 'ADMIN']}>
+            <AuditLogsView onSelectWorkOrder={(orderId) => {
+              const target = workOrders.find(w => w.id === orderId);
+              if (target) setSelectedOrder(target);
+              handleTabChange('work-orders', orderId);
+            }} />
           </RoleGuard>
         )}
 

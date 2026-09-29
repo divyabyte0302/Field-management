@@ -11,6 +11,8 @@
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
+    "test": "tsx scripts/security-audit-test.ts",
+    "test:security": "tsx scripts/security-audit-test.ts",
     "backend:build": "mvn clean compile -f backend/pom.xml"
   },
   "dependencies": {

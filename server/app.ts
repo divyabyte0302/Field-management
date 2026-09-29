@@ -20,7 +20,7 @@ import {
 import { 
   WorkOrder, WorkOrderStatus, Priority, AuditLog, TimeEntry, WorkOrderPart, RoleName, User,
   Comment, Attachment, AssignmentRecord, ServiceRequest, Part, SlaPolicy, SlaStatus,
-  FacilityInventory, InventoryHistory, SlaDashboardStats, AppNotification, DashboardStats, Customer
+  FacilityInventory, InventoryHistory, SlaDashboardStats, AppNotification, DashboardStats, Customer, Facility
 } from './types';
 import {
   calculateDeadline, matchSlaPolicy, assessWorkOrderSla, calculateFinancialSummary
@@ -915,6 +915,18 @@ app.use((req, res, next) => {
       }
     }
 
+    // Customer scoping: customers only see work orders for their own account / primary facility
+    if (req.user?.roles.includes('CUSTOMER') && !req.user?.roles.some(r => ['ADMIN', 'SUPER_ADMIN', 'DISPATCHER'].includes(r))) {
+      const customer = customers.find(c => c.email.toLowerCase() === req.user?.email.toLowerCase());
+      if (customer) {
+        filtered = filtered.filter(w => 
+          (w.customerId && w.customerId === customer.id) ||
+          (w.facilityId && w.facilityId === customer.primaryFacilityId) ||
+          (w.customerName && w.customerName.toLowerCase() === customer.name.toLowerCase())
+        );
+      }
+    }
+
     // Filter archived unless explicitly requested
     if (req.query.includeArchived !== 'true') {
       filtered = filtered.filter(w => !w.archived);
@@ -1024,10 +1036,27 @@ app.use((req, res, next) => {
       });
     }
 
+    // Customer privilege check
+    if (req.user?.roles.includes('CUSTOMER') && !req.user?.roles.some(r => ['ADMIN', 'SUPER_ADMIN', 'DISPATCHER'].includes(r))) {
+      const customer = customers.find(c => c.email.toLowerCase() === req.user?.email.toLowerCase());
+      const ownsOrder = customer && (
+        (order.customerId && order.customerId === customer.id) ||
+        (order.facilityId && order.facilityId === customer.primaryFacilityId) ||
+        (order.customerName && order.customerName.toLowerCase() === customer.name.toLowerCase())
+      );
+      if (!ownsOrder) {
+        return res.status(403).json({
+          success: false,
+          statusCode: 403,
+          message: "Forbidden: Customers can only access their own organization's work orders",
+        });
+      }
+    }
+
     // Technician privilege check
     if (req.user?.roles.includes('TECHNICIAN') && !req.user?.roles.some(r => ['ADMIN', 'SUPER_ADMIN', 'DISPATCHER'].includes(r))) {
       const tech = technicians.find(t => t.email.toLowerCase() === req.user?.email.toLowerCase());
-      if (tech && order.assignedTechnicianId && order.assignedTechnicianId !== tech.id) {
+      if (tech && (!order.assignedTechnicianId || order.assignedTechnicianId !== tech.id)) {
         return res.status(403).json({
           success: false,
           statusCode: 403,
@@ -1368,10 +1397,27 @@ app.use((req, res, next) => {
       return res.status(403).json({ success: false, message: 'Forbidden: Cross-organization access' });
     }
 
+    // Check customer transition constraint
+    if (req.user?.roles.includes('CUSTOMER') && !req.user?.roles.some(r => ['ADMIN', 'SUPER_ADMIN', 'DISPATCHER'].includes(r))) {
+      const customer = customers.find(c => c.email.toLowerCase() === req.user?.email.toLowerCase());
+      const ownsOrder = customer && (
+        (order.customerId && order.customerId === customer.id) ||
+        (order.facilityId && order.facilityId === customer.primaryFacilityId) ||
+        (order.customerName && order.customerName.toLowerCase() === customer.name.toLowerCase())
+      );
+      if (!ownsOrder) {
+        return res.status(403).json({
+          success: false,
+          statusCode: 403,
+          message: "Forbidden: Customers can only transition their own organization's work orders",
+        });
+      }
+    }
+
     // Check technician assignment constraint
     if (req.user?.roles.includes('TECHNICIAN') && !req.user?.roles.some(r => ['ADMIN', 'SUPER_ADMIN', 'DISPATCHER'].includes(r))) {
       const tech = technicians.find(t => t.email.toLowerCase() === req.user?.email.toLowerCase());
-      if (tech && order.assignedTechnicianId && order.assignedTechnicianId !== tech.id) {
+      if (tech && (!order.assignedTechnicianId || order.assignedTechnicianId !== tech.id)) {
         return res.status(403).json({
           success: false,
           statusCode: 403,
@@ -1380,12 +1426,26 @@ app.use((req, res, next) => {
       }
     }
 
+    // Closing requires Admin / Super Admin (Technicians and Customers cannot close)
+    if (targetStatus === 'CLOSED' && !req.user?.roles.some(r => ['ADMIN', 'SUPER_ADMIN'].includes(r))) {
+      return res.status(403).json({
+        success: false,
+        statusCode: 403,
+        errorCode: 'UNAUTHORIZED_CLOSE',
+        message: 'Forbidden: Closing work orders requires Administrator privileges',
+      });
+    }
+
     // Validate transition via state machine
     const validation = validateTransition(order.status, targetStatus, req.user?.roles || []);
     if (!validation.valid) {
-      return res.status(400).json({
+      const isForbidden = validation.error?.toLowerCase().includes('permission denied');
+      const statusCode = isForbidden ? 403 : 409;
+      return res.status(statusCode).json({
         success: false,
-        statusCode: 400,
+        statusCode,
+        status: statusCode,
+        errorCode: isForbidden ? 'FORBIDDEN_TRANSITION' : 'INVALID_STATE_TRANSITION',
         message: validation.error,
       });
     }
@@ -1508,7 +1568,7 @@ app.use((req, res, next) => {
     });
   };
 
-  app.post(['/api/v1/work-orders/:id/transition', '/api/work-orders/:id/transition'], authenticateJwt, handleTransition);
+  app.post(['/api/v1/work-orders/:id/transition', '/api/work-orders/:id/transition', '/api/v1/work-orders/:id/status', '/api/work-orders/:id/status'], authenticateJwt, handleTransition);
 
   // ASSIGN / REASSIGN TECHNICIAN (Dispatcher / Admin / Super Admin)
   const handleAssign = (req: AuthenticatedRequest, res: Response) => {
@@ -2003,17 +2063,17 @@ app.use((req, res, next) => {
   });
 
   // RECORD MANUAL TIME ENTRY
-  app.post('/api/v1/work-orders/:id/time-entries', authenticateJwt, requireRoles('SUPER_ADMIN', 'ADMIN', 'TECHNICIAN'), (req: AuthenticatedRequest, res: Response) => {
+  app.post(['/api/v1/work-orders/:id/time-entries', '/api/work-orders/:id/time-entries', '/api/v1/work-orders/:id/time', '/api/work-orders/:id/time'], authenticateJwt, requireRoles('SUPER_ADMIN', 'ADMIN', 'TECHNICIAN'), (req: AuthenticatedRequest, res: Response) => {
     const { durationMinutes, entryType, notes, description, isBillable, hourlyRate, startTime, endTime } = req.body;
     const order = workOrders.find(w => w.id === req.params.id);
     if (!order) {
-      return res.status(404).json({ success: false, message: 'Work Order not found' });
+      return res.status(404).json({ success: false, statusCode: 404, message: 'Work Order not found' });
     }
 
     // Technician assignment check
     if (req.user?.roles.includes('TECHNICIAN') && !req.user?.roles.some(r => ['ADMIN', 'SUPER_ADMIN', 'DISPATCHER'].includes(r))) {
       const tech = technicians.find(t => t.email.toLowerCase() === req.user?.email.toLowerCase());
-      if (tech && order.assignedTechnicianId && order.assignedTechnicianId !== tech.id) {
+      if (tech && (!order.assignedTechnicianId || order.assignedTechnicianId !== tech.id)) {
         return res.status(403).json({
           success: false,
           statusCode: 403,
@@ -2029,7 +2089,7 @@ app.use((req, res, next) => {
         const end = new Date(endTime).getTime();
         minutes = Math.max(1, Math.round((end - start) / (60 * 1000)));
       } else {
-        return res.status(400).json({ success: false, message: 'durationMinutes must be a positive integer' });
+        return res.status(400).json({ success: false, statusCode: 400, message: 'durationMinutes must be a positive integer greater than 0' });
       }
     }
 
@@ -2102,7 +2162,7 @@ app.use((req, res, next) => {
   });
 
   // ALLOCATE PART TO WORK ORDER (With facility inventory validation & negative stock prevention)
-  app.post('/api/v1/work-orders/:id/parts', authenticateJwt, requireRoles('SUPER_ADMIN', 'ADMIN', 'TECHNICIAN'), (req: AuthenticatedRequest, res: Response) => {
+  app.post(['/api/v1/work-orders/:id/parts', '/api/work-orders/:id/parts'], authenticateJwt, requireRoles('SUPER_ADMIN', 'ADMIN', 'TECHNICIAN'), (req: AuthenticatedRequest, res: Response) => {
     const { partId, quantity, notes } = req.body;
     const order = workOrders.find(w => w.id === req.params.id);
     if (!order) {
@@ -2111,7 +2171,7 @@ app.use((req, res, next) => {
 
     if (req.user?.roles.includes('TECHNICIAN') && !req.user?.roles.some(r => ['ADMIN', 'SUPER_ADMIN', 'DISPATCHER'].includes(r))) {
       const tech = technicians.find(t => t.email.toLowerCase() === req.user?.email.toLowerCase());
-      if (tech && order.assignedTechnicianId && order.assignedTechnicianId !== tech.id) {
+      if (tech && (!order.assignedTechnicianId || order.assignedTechnicianId !== tech.id)) {
         return res.status(403).json({
           success: false,
           statusCode: 403,
@@ -2343,7 +2403,7 @@ app.use((req, res, next) => {
   });
 
   // ADJUST INVENTORY (Manual adjustment with negative stock prevention)
-  app.post('/api/v1/inventory/adjust', authenticateJwt, requireRoles('SUPER_ADMIN', 'ADMIN', 'DISPATCHER'), (req: AuthenticatedRequest, res: Response) => {
+  app.post(['/api/v1/inventory/adjust', '/api/inventory/adjust'], authenticateJwt, requireRoles('SUPER_ADMIN', 'ADMIN', 'DISPATCHER'), (req: AuthenticatedRequest, res: Response) => {
     const { facilityId, partId, quantityChanged, reason } = req.body;
     if (!facilityId || !partId || quantityChanged === undefined || !reason) {
       return res.status(400).json({ success: false, message: 'facilityId, partId, quantityChanged, and reason are required' });
@@ -3118,6 +3178,98 @@ app.use((req, res, next) => {
   app.get('/api/v1/customers/:id', authenticateJwt, handleGetCustomerById);
   app.get('/api/customers/:id', authenticateJwt, handleGetCustomerById);
 
+  // CREATE CUSTOMER
+  const handleCreateCustomer = (req: AuthenticatedRequest, res: Response) => {
+    const { name, contactPerson, email, phone, tier, address, city, state, primaryFacilityId, activeContract } = req.body;
+    if (!name || !email) {
+      return res.status(400).json({ success: false, statusCode: 400, message: 'Name and email are required' });
+    }
+    const newCustomer: Customer = {
+      id: `cust-${Date.now()}`,
+      organizationId: req.user?.organizationId || 'org-apex-1',
+      name,
+      contactPerson: contactPerson || name,
+      email,
+      phone: phone || '',
+      tier: tier || 'STANDARD',
+      slaTier: tier === 'ENTERPRISE' ? 'Mission-Critical 24/7 Enterprise Tier' : 'Standard Business Hours Tier',
+      primaryFacilityId: primaryFacilityId || 'fac-1',
+      primaryFacilityName: facilities.find(f => f.id === primaryFacilityId)?.name || 'Apex Tower Manhattan',
+      activeContract: activeContract || `CNT-${Date.now().toString().slice(-6)}`,
+      status: 'ACTIVE',
+      openTicketsCount: 0,
+      totalSpentYtd: 0,
+      address: address || '',
+      city: city || 'New York',
+      state: state || 'NY',
+    };
+    customers.push(newCustomer);
+    return res.status(201).json({
+      success: true,
+      statusCode: 201,
+      message: 'Customer created successfully',
+      data: newCustomer,
+    });
+  };
+  app.post(['/api/v1/customers', '/api/customers'], authenticateJwt, requireRoles('SUPER_ADMIN', 'ADMIN', 'DISPATCHER'), handleCreateCustomer);
+
+  // GET CUSTOMER SITES / FACILITIES
+  const handleGetCustomerSites = (req: AuthenticatedRequest, res: Response) => {
+    const customer = customers.find(c => c.id === req.params.id);
+    if (!customer) {
+      return res.status(404).json({ success: false, statusCode: 404, message: 'Customer not found' });
+    }
+    if (!checkTenantAccess(req, customer.organizationId)) {
+      return res.status(403).json({ success: false, statusCode: 403, message: 'Forbidden' });
+    }
+    const customerSites = facilities.filter(f => f.organizationId === customer.organizationId || f.id === customer.primaryFacilityId);
+    return res.json({
+      success: true,
+      statusCode: 200,
+      data: customerSites,
+    });
+  };
+  app.get(['/api/v1/customers/:id/sites', '/api/customers/:id/sites', '/api/v1/customers/:id/facilities', '/api/customers/:id/facilities'], authenticateJwt, handleGetCustomerSites);
+
+  // CREATE CUSTOMER SITE / FACILITY
+  const handleCreateCustomerSite = (req: AuthenticatedRequest, res: Response) => {
+    const customer = customers.find(c => c.id === req.params.id);
+    if (!customer) {
+      return res.status(404).json({ success: false, statusCode: 404, message: 'Customer not found' });
+    }
+    if (!checkTenantAccess(req, customer.organizationId)) {
+      return res.status(403).json({ success: false, statusCode: 403, message: 'Forbidden' });
+    }
+    const { name, address, city, state, postalCode, facilityType } = req.body;
+    if (!name || !address) {
+      return res.status(400).json({ success: false, statusCode: 400, message: 'Site name and address are required' });
+    }
+    const code = `FAC-${name.substring(0, 3).toUpperCase()}-${Math.floor(100 + Math.random() * 900)}`;
+    const newFacility: Facility = {
+      id: `fac-${Date.now()}`,
+      organizationId: customer.organizationId,
+      customerId: customer.id,
+      name,
+      code,
+      facilityType: facilityType || 'Commercial Office Building',
+      address,
+      city: city || 'New York',
+      state: state || 'NY',
+      postalCode: postalCode || '10001',
+      lat: 40.7128,
+      lng: -74.0060,
+      totalAssetsCount: 0,
+    };
+    facilities.push(newFacility);
+    return res.status(201).json({
+      success: true,
+      statusCode: 201,
+      message: 'Site created successfully',
+      data: newFacility,
+    });
+  };
+  app.post(['/api/v1/customers/:id/sites', '/api/customers/:id/sites', '/api/v1/customers/:id/facilities', '/api/customers/:id/facilities'], authenticateJwt, requireRoles('SUPER_ADMIN', 'ADMIN', 'DISPATCHER'), handleCreateCustomerSite);
+
   // OPERATIONAL REPORTS & ANALYTICS
   const handleGetReports = (req: AuthenticatedRequest, res: Response) => {
     let scopedOrders = workOrders;
@@ -3188,8 +3340,7 @@ app.use((req, res, next) => {
       data: reportData,
     });
   };
-  app.get('/api/v1/reports', authenticateJwt, handleGetReports);
-  app.get('/api/reports', authenticateJwt, handleGetReports);
+  app.get(['/api/v1/reports', '/api/reports', '/api/v1/reports/summary', '/api/reports/summary'], authenticateJwt, handleGetReports);
 
   const handleGetParts = (req: AuthenticatedRequest, res: Response) => {
     res.json({
