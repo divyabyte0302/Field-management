@@ -1,0 +1,177 @@
+{
+  "entities": {
+    "WorkOrder": {
+      "title": "WorkOrder",
+      "description": "Commercial facility work order with deterministic lifecycle and SLA tracking",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "organizationId": { "type": "string" },
+        "workOrderNumber": { "type": "string" },
+        "facilityId": { "type": "string" },
+        "facilityName": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "status": { "type": "string" },
+        "priority": { "type": "string" },
+        "category": { "type": "string" },
+        "assignedTechnicianId": { "type": "string" },
+        "assignedTechnicianName": { "type": "string" },
+        "customerId": { "type": "string" },
+        "customerName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "organizationId", "workOrderNumber", "facilityId", "title", "status", "priority", "createdAt"]
+    },
+    "Facility": {
+      "title": "Facility",
+      "description": "Physical commercial building or campus",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "organizationId": { "type": "string" },
+        "name": { "type": "string" },
+        "code": { "type": "string" },
+        "facilityType": { "type": "string" },
+        "address": { "type": "string" },
+        "city": { "type": "string" },
+        "state": { "type": "string" },
+        "postalCode": { "type": "string" }
+      },
+      "required": ["id", "organizationId", "name", "code", "address"]
+    },
+    "Asset": {
+      "title": "Asset",
+      "description": "Critical facility equipment under maintenance",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "organizationId": { "type": "string" },
+        "facilityId": { "type": "string" },
+        "tagNumber": { "type": "string" },
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "model": { "type": "string" },
+        "status": { "type": "string" },
+        "criticality": { "type": "string" }
+      },
+      "required": ["id", "organizationId", "facilityId", "tagNumber", "name", "status"]
+    },
+    "Technician": {
+      "title": "Technician",
+      "description": "Field service specialist technician profile",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "organizationId": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" },
+        "status": { "type": "string" },
+        "hourlyRate": { "type": "number" }
+      },
+      "required": ["id", "organizationId", "name", "email", "status"]
+    },
+    "Customer": {
+      "title": "Customer",
+      "description": "Commercial corporate client account",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "organizationId": { "type": "string" },
+        "name": { "type": "string" },
+        "contactPerson": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" },
+        "tier": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "organizationId", "name", "email", "status"]
+    },
+    "Part": {
+      "title": "Part",
+      "description": "Replacement parts and consumable catalog",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "organizationId": { "type": "string" },
+        "sku": { "type": "string" },
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "unitCost": { "type": "number" },
+        "unitPrice": { "type": "number" },
+        "stockOnHand": { "type": "number" },
+        "reorderPoint": { "type": "number" }
+      },
+      "required": ["id", "organizationId", "sku", "name", "unitCost", "unitPrice", "stockOnHand"]
+    },
+    "ServiceRequest": {
+      "title": "ServiceRequest",
+      "description": "Inbound customer maintenance ticket",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "organizationId": { "type": "string" },
+        "ticketNumber": { "type": "string" },
+        "facilityId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "priority": { "type": "string" },
+        "status": { "type": "string" },
+        "requesterEmail": { "type": "string", "format": "email" }
+      },
+      "required": ["id", "organizationId", "ticketNumber", "facilityId", "title", "status"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Immutable compliance and state transition ledger",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "organizationId": { "type": "string" },
+        "entityName": { "type": "string" },
+        "entityId": { "type": "string" },
+        "action": { "type": "string" },
+        "performedBy": { "type": "string" },
+        "performedByRole": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "organizationId", "entityName", "entityId", "action", "performedBy", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/work_orders/{workOrderId}": {
+      "schema": "WorkOrder",
+      "description": "Commercial facility work orders collection"
+    },
+    "/facilities/{facilityId}": {
+      "schema": "Facility",
+      "description": "Physical buildings and facility locations"
+    },
+    "/assets/{assetId}": {
+      "schema": "Asset",
+      "description": "Equipment assets registry"
+    },
+    "/technicians/{technicianId}": {
+      "schema": "Technician",
+      "description": "Field technicians roster"
+    },
+    "/customers/{customerId}": {
+      "schema": "Customer",
+      "description": "Commercial customer client accounts"
+    },
+    "/parts/{partId}": {
+      "schema": "Part",
+      "description": "Inventory parts and stock levels"
+    },
+    "/service_requests/{serviceRequestId}": {
+      "schema": "ServiceRequest",
+      "description": "Customer service intake requests"
+    },
+    "/audit_logs/{auditLogId}": {
+      "schema": "AuditLog",
+      "description": "Immutable audit trails and compliance logs"
+    }
+  }
+}

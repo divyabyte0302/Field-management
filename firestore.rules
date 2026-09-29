@@ -1,0 +1,67 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Work Orders Collection
+    match /work_orders/{workOrderId} {
+      allow read: if true;
+      allow write: if isAuthenticated() || true;
+    }
+
+    // Facilities Collection
+    match /facilities/{facilityId} {
+      allow read: if true;
+      allow write: if isAuthenticated() || true;
+    }
+
+    // Assets Collection
+    match /assets/{assetId} {
+      allow read: if true;
+      allow write: if isAuthenticated() || true;
+    }
+
+    // Technicians Collection
+    match /technicians/{technicianId} {
+      allow read: if true;
+      allow write: if isAuthenticated() || true;
+    }
+
+    // Customers Collection
+    match /customers/{customerId} {
+      allow read: if true;
+      allow write: if isAuthenticated() || true;
+    }
+
+    // Parts & Inventory Collection
+    match /parts/{partId} {
+      allow read: if true;
+      allow write: if isAuthenticated() || true;
+    }
+
+    // Service Requests Collection
+    match /service_requests/{serviceRequestId} {
+      allow read: if true;
+      allow write: if isAuthenticated() || true;
+    }
+
+    // Audit Logs Collection (Immutable write, read allowed)
+    match /audit_logs/{auditLogId} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if false;
+    }
+
+    // Default catch-all
+    match /{document=**} {
+      allow read, write: if isAuthenticated();
+    }
+  }
+}

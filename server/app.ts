@@ -26,6 +26,7 @@ import {
   calculateDeadline, matchSlaPolicy, assessWorkOrderSla, calculateFinancialSummary
 } from './slaEngine';
 import { OPENAPI_SPEC, renderSwaggerHtml } from './openapi';
+import { mirrorWorkOrderToFirebase, mirrorAuditLogToFirebase, mirrorServiceRequestToFirebase } from './firebaseStorage';
 
 const PORT = 3000;
 
@@ -1196,6 +1197,7 @@ app.use((req, res, next) => {
     };
 
     workOrders.unshift(newOrder);
+    mirrorWorkOrderToFirebase(newOrder).catch(() => {});
 
     const enriched = enrichWorkOrderRecord(newOrder, req.user?.roles || []);
 
@@ -1559,6 +1561,9 @@ app.use((req, res, next) => {
         link: 'technician-portal',
       });
     }
+
+    mirrorWorkOrderToFirebase(order).catch(() => {});
+    if (auditEntry) mirrorAuditLogToFirebase(auditEntry).catch(() => {});
 
     return res.json({
       success: true,
