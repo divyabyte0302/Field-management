@@ -5,15 +5,85 @@ import { api } from '../services/api';
 import { 
   ShieldCheck, Lock, Mail, User, Building, 
   KeyRound, AlertCircle, CheckCircle2, 
-  RefreshCw 
+  RefreshCw, Users, Check
 } from 'lucide-react';
+
+interface SwitchableUser {
+  id: string;
+  name: string;
+  email: string;
+  role: RoleName;
+  roleLabel: string;
+  initials: string;
+  avatarColor: string;
+  badgeColor: string;
+  description: string;
+}
+
+const SWITCHABLE_USERS: SwitchableUser[] = [
+  {
+    id: 'user-admin',
+    name: 'Michael Scott',
+    email: 'admin@keystone.io',
+    role: 'ADMIN',
+    roleLabel: 'Admin',
+    initials: 'MS',
+    avatarColor: 'bg-blue-600 text-white',
+    badgeColor: 'bg-blue-50 text-blue-700 border-blue-200',
+    description: 'Tenant Operations & Facility Admin',
+  },
+  {
+    id: 'user-dispatcher',
+    name: 'Marcus Chen',
+    email: 'dispatcher@keystone.io',
+    role: 'DISPATCHER',
+    roleLabel: 'Dispatcher',
+    initials: 'MC',
+    avatarColor: 'bg-emerald-600 text-white',
+    badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    description: 'Work Order Routing & Tech Scheduling',
+  },
+  {
+    id: 'user-technician',
+    name: 'Elena Davis',
+    email: 'tech.davis@keystone.io',
+    role: 'TECHNICIAN',
+    roleLabel: 'Technician',
+    initials: 'ED',
+    avatarColor: 'bg-amber-600 text-white',
+    badgeColor: 'bg-amber-50 text-amber-700 border-amber-200',
+    description: 'Mobile Field Repairs & Labor Logging',
+  },
+  {
+    id: 'user-customer',
+    name: 'Sarah Jenkins',
+    email: 'facilitymgr@globalfin.com',
+    role: 'CUSTOMER',
+    roleLabel: 'Customer',
+    initials: 'SJ',
+    avatarColor: 'bg-indigo-600 text-white',
+    badgeColor: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+    description: 'Commercial Tenant Facility Manager',
+  },
+  {
+    id: 'user-superadmin',
+    name: 'Alex Rivera',
+    email: 'superadmin@keystone.io',
+    role: 'SUPER_ADMIN',
+    roleLabel: 'Super Admin',
+    initials: 'AR',
+    avatarColor: 'bg-purple-600 text-white',
+    badgeColor: 'bg-purple-50 text-purple-700 border-purple-200',
+    description: 'Global Root Access & System Oversight',
+  },
+];
 
 export const LoginPage: React.FC = () => {
   const { login, register, sessionExpired, dismissSessionExpired } = useAuth();
 
   const [activeTab, setActiveTab] = useState<'login' | 'register' | 'forgot'>('login');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('admin@keystone.io');
+  const [password, setPassword] = useState('password123');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [orgCode, setOrgCode] = useState('APEX');
@@ -28,6 +98,12 @@ export const LoginPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSelectUser = (u: SwitchableUser) => {
+    setEmail(u.email);
+    setPassword('password123');
+    setError(null);
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -186,6 +262,65 @@ export const LoginPage: React.FC = () => {
           {/* SIGN IN FORM */}
           {activeTab === 'login' && (
             <form id="signin-form" onSubmit={handleLogin} className="space-y-4">
+              {/* User Switching Section */}
+              <div className="pb-3 border-b border-slate-100">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                    <Users className="w-3.5 h-3.5 text-blue-600" />
+                    Switch User
+                  </span>
+                  <span className="text-[11px] text-slate-500">
+                    Select a profile to switch accounts
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {SWITCHABLE_USERS.map((u) => {
+                    const isSelected = email.toLowerCase() === u.email.toLowerCase();
+                    return (
+                      <button
+                        key={u.id}
+                        id={`switch-user-${u.role.toLowerCase()}`}
+                        type="button"
+                        onClick={() => handleSelectUser(u)}
+                        className={`text-left p-2.5 rounded-xl border transition-all flex items-center justify-between cursor-pointer ${
+                          isSelected
+                            ? 'bg-blue-50/80 border-blue-500 shadow-2xs ring-1 ring-blue-500/20'
+                            : 'bg-slate-50/70 border-slate-200/80 hover:bg-slate-100/80 hover:border-slate-300'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold shrink-0 shadow-2xs ${u.avatarColor}`}>
+                            {u.initials}
+                          </div>
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-xs font-bold text-slate-900 truncate">{u.name}</span>
+                              <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded border ${u.badgeColor}`}>
+                                {u.roleLabel}
+                              </span>
+                            </div>
+                            <div className="text-[11px] text-slate-500 truncate font-mono">
+                              {u.email}
+                            </div>
+                          </div>
+                        </div>
+
+                        {isSelected ? (
+                          <span className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
+                            <Check className="w-3 h-3 stroke-[3]" />
+                          </span>
+                        ) : (
+                          <span className="text-[11px] text-slate-400 font-medium shrink-0 pl-1">
+                            Switch
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1.5">Email Address</label>
                 <div className="relative">
