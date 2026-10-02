@@ -16,16 +16,16 @@ export const ApiDocsView: React.FC = () => {
   };
 
   const coreEndpoints = [
-    { method: 'POST', path: '/api/v1/auth/login', desc: 'Authenticate credentials & retrieve JWT token pair', tag: 'Auth' },
+    { method: 'POST', path: '/api/v1/auth/login', desc: 'Authenticate credentials & retrieve access token pair', tag: 'Auth' },
     { method: 'GET', path: '/api/v1/work-orders', desc: 'List work orders with pagination, status, and SLA filters', tag: 'Orders' },
     { method: 'POST', path: '/api/v1/work-orders', desc: 'Create a new maintenance work order in NEW status', tag: 'Orders' },
-    { method: 'PATCH', path: '/api/v1/work-orders/{id}/status', desc: 'Execute FSM status transition with validation', tag: 'Orders' },
+    { method: 'PATCH', path: '/api/v1/work-orders/{id}/status', desc: 'Execute work order status transition with validation', tag: 'Orders' },
     { method: 'POST', path: '/api/v1/work-orders/{id}/assign', desc: 'Dispatch work order to eligible active technician', tag: 'Dispatch' },
     { method: 'GET', path: '/api/v1/technicians', desc: 'Query technician roster, skillsets, and live GPS', tag: 'Field' },
     { method: 'GET', path: '/api/v1/inventory/items', desc: 'Multi-facility parts stock with reorder indicators', tag: 'Inventory' },
     { method: 'GET', path: '/api/v1/sla/policies', desc: 'SLA target response and resolution countdowns', tag: 'SLA' },
     { method: 'GET', path: '/api/v1/dashboard/stats', desc: 'Aggregate operations KPIs, MTTR, and SLA compliance', tag: 'Analytics' },
-    { method: 'GET', path: '/api/health', desc: 'System health, FSM engine, and database telemetry', tag: 'System' },
+    { method: 'GET', path: '/api/health', desc: 'System health and operational telemetry', tag: 'System' },
   ];
 
   const getMethodBadge = (method: string) => {
@@ -55,7 +55,7 @@ export const ApiDocsView: React.FC = () => {
           </div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Interactive Swagger & API Documentation</h1>
           <p className="text-xs text-slate-500 max-w-2xl mt-1">
-            Complete API specification for Project KEYSTONE. Covers JWT authentication, finite-state machine transitions, technician dispatching, SLA tracking, and multi-tenant isolation.
+            Complete API specification for Project KEYSTONE. Covers secure authentication, deterministic lifecycle transitions, technician dispatching, SLA tracking, and multi-tenant isolation.
           </p>
         </div>
 
@@ -108,7 +108,7 @@ export const ApiDocsView: React.FC = () => {
         <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-xs">
           <div className="flex items-center gap-2 text-slate-900 font-semibold text-xs mb-1">
             <Shield className="w-4 h-4 text-emerald-600" />
-            <span>JWT Bearer Authentication</span>
+            <span>Bearer Token Authentication</span>
           </div>
           <p className="text-[11px] text-slate-500">
             Pass <code className="bg-slate-100 px-1 py-0.5 rounded text-slate-800 font-mono text-[10px]">Authorization: Bearer &lt;token&gt;</code> on all requests. Tokens are verified against the revocation registry.
@@ -118,10 +118,10 @@ export const ApiDocsView: React.FC = () => {
         <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-xs">
           <div className="flex items-center gap-2 text-slate-900 font-semibold text-xs mb-1">
             <Server className="w-4 h-4 text-blue-600" />
-            <span>Deterministic FSM Transitions</span>
+            <span>Workflow State Transitions</span>
           </div>
           <p className="text-[11px] text-slate-500">
-            Work order lifecycle strictly enforces valid state machine transitions (NEW &rarr; ASSIGNED &rarr; IN_PROGRESS &rarr; COMPLETED &rarr; CLOSED).
+            Work order lifecycle strictly enforces valid lifecycle transitions (NEW &rarr; ASSIGNED &rarr; IN_PROGRESS &rarr; COMPLETED &rarr; CLOSED).
           </p>
         </div>
 

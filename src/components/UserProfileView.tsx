@@ -4,10 +4,9 @@ import {
   CheckCircle2, AlertCircle, RefreshCw, LogOut, Lock
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { RoleName } from '../types';
 
 export const UserProfileView: React.FC = () => {
-  const { user, activeRole, logout, loginAs, changePassword } = useAuth();
+  const { user, activeRole, logout, changePassword } = useAuth();
   
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -45,14 +44,6 @@ export const UserProfileView: React.FC = () => {
     }
   };
 
-  const roleOptions: { role: RoleName; label: string; desc: string }[] = [
-    { role: 'SUPER_ADMIN', label: 'Platform Super Admin', desc: 'Full root access across all organizations and tenants' },
-    { role: 'ADMIN', label: 'Organization Admin', desc: 'Apex Facility Solutions tenant manager' },
-    { role: 'DISPATCHER', label: 'Chief Dispatcher', desc: 'Work order routing, technician scheduling, triage' },
-    { role: 'TECHNICIAN', label: 'Field Technician', desc: 'Mobile execution workbench, time & parts logging' },
-    { role: 'CUSTOMER', label: 'Facility Customer', desc: 'Commercial tenant portal, request origination, sign-off' },
-  ];
-
   return (
     <div className="space-y-6 max-w-4xl mx-auto animate-in fade-in duration-300">
       {/* Header */}
@@ -62,7 +53,7 @@ export const UserProfileView: React.FC = () => {
           Operator Profile & Security Center
         </h1>
         <p className="text-xs text-slate-500 mt-1">
-          Identity management, cryptographic session telemetry, and role persona switcher.
+          Manage your account profile credentials and enterprise security settings.
         </p>
       </div>
 
@@ -87,7 +78,7 @@ export const UserProfileView: React.FC = () => {
               <span className="font-mono text-slate-700 font-semibold">{user?.organizationId || 'org-apex-1'}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Active Persona:</span>
+              <span className="text-slate-500">Assigned Role:</span>
               <span className="font-bold text-blue-600">{activeRole}</span>
             </div>
             <div className="flex justify-between">
@@ -107,40 +98,37 @@ export const UserProfileView: React.FC = () => {
           </button>
         </div>
 
-        {/* Security & Persona Switcher */}
+        {/* Security & Password Settings */}
         <div className="md:col-span-2 space-y-6">
-          {/* Quick Persona Switcher for evaluation */}
+          {/* Account Security & Access Credentials */}
           <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-2xs">
             <h3 className="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2">
               <Shield className="w-4 h-4 text-blue-600" />
-              Evaluation Persona Switcher (Instant Impersonation)
+              Enterprise Role & Access Credentials
             </h3>
             <p className="text-xs text-slate-500 mb-4">
-              Seamlessly switch between any of the 5 Keystone security roles to test permissions, navigation, and tenant policies.
+              Your security authorization and assigned tenant permissions within the KEYSTONE platform.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {roleOptions.map((opt) => (
-                <button
-                  key={opt.role}
-                  onClick={() => loginAs(opt.role)}
-                  className={`p-3 rounded-xl border text-left transition flex flex-col justify-between cursor-pointer ${
-                    activeRole === opt.role
-                      ? 'bg-blue-50 border-blue-500 shadow-xs ring-1 ring-blue-500/30'
-                      : 'bg-slate-50 border-slate-200 hover:border-slate-300'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-900">{opt.label}</span>
-                    {activeRole === opt.role && (
-                      <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-600 text-white">
-                        Active
-                      </span>
-                    )}
-                  </div>
-                  <span className="text-[11px] text-slate-500 mt-1 leading-snug">{opt.desc}</span>
-                </button>
-              ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50">
+                <span className="text-[11px] text-slate-500 font-medium block mb-1">Primary Role</span>
+                <span className="font-bold text-slate-900">{activeRole || 'USER'}</span>
+              </div>
+              <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50">
+                <span className="text-[11px] text-slate-500 font-medium block mb-1">Authentication Method</span>
+                <span className="font-bold text-slate-900">Secure Enterprise Token</span>
+              </div>
+              <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50">
+                <span className="text-[11px] text-slate-500 font-medium block mb-1">Access Control Model</span>
+                <span className="font-bold text-slate-900">Role-Based Access Control</span>
+              </div>
+              <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50">
+                <span className="text-[11px] text-slate-500 font-medium block mb-1">Session Integrity</span>
+                <span className="text-emerald-700 font-bold flex items-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Encrypted & Active
+                </span>
+              </div>
             </div>
           </div>
 

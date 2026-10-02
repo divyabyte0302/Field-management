@@ -15,13 +15,13 @@ export const SecurityArchitectureView: React.FC = () => {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-50 text-blue-700 border border-blue-200 font-bold">
-              SPRING SECURITY + JWT ENTERPRISE BLUEPRINT
+              ENTERPRISE SECURITY BLUEPRINT
             </span>
             <span className="text-xs text-slate-500 font-mono">• Production Specification</span>
           </div>
           <h2 className="text-xl font-bold text-slate-900">Security & Authorization Architecture</h2>
           <p className="text-xs text-slate-500 mt-1">
-            Multi-tiered role-based access control, stateless JWT lifecycle, token invalidation, and tenant isolation
+            Multi-tiered role-based access control, secure session lifecycle, token invalidation, and tenant isolation
           </p>
         </div>
 
@@ -33,7 +33,7 @@ export const SecurityArchitectureView: React.FC = () => {
               activeTab === 'matrix' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            RBAC Matrix
+            Role Access Matrix
           </button>
           <button
             onClick={() => setActiveTab('jwt')}
@@ -41,7 +41,7 @@ export const SecurityArchitectureView: React.FC = () => {
               activeTab === 'jwt' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            JWT Lifecycle & Revocation
+            Session Lifecycle & Invalidation
           </button>
           <button
             onClick={() => setActiveTab('spring')}
@@ -49,7 +49,7 @@ export const SecurityArchitectureView: React.FC = () => {
               activeTab === 'spring' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            Spring Security Config
+            Security Policy Config
           </button>
           <button
             onClick={() => setActiveTab('isolation')}
@@ -69,7 +69,7 @@ export const SecurityArchitectureView: React.FC = () => {
             <div>
               <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
                 <Users className="w-4 h-4 text-blue-600" />
-                Role-Based Access Control (RBAC) Entitlement Matrix
+                Role Entitlement Matrix
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">
                 Strict enforcement at filter and service layers preventing horizontal and vertical privilege escalation
@@ -139,7 +139,7 @@ export const SecurityArchitectureView: React.FC = () => {
               <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
                 <span className="font-semibold text-blue-700">Short-Lived Access Token</span>
                 <p className="text-slate-600">
-                  Valid for 60 minutes. Contains user ID, organization ID, and role claims. Encrypted using HMAC-SHA256 signature verification.
+                  Valid for 60 minutes. Contains user ID, organization ID, and role claims. Protected with secure cryptographic signature verification.
                 </p>
               </div>
 
@@ -151,9 +151,9 @@ export const SecurityArchitectureView: React.FC = () => {
               </div>
 
               <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
-                <span className="font-semibold text-amber-700">BCrypt Password Hashing</span>
+                <span className="font-semibold text-amber-700">Secure Password Hashing</span>
                 <p className="text-slate-600">
-                  Passwords salted with 10 rounds of BCrypt. Plain-text passwords are never persisted.
+                  Passwords salted with high-work-factor cryptographic hashing. Plain-text passwords are never persisted.
                 </p>
               </div>
             </div>
@@ -168,7 +168,7 @@ export const SecurityArchitectureView: React.FC = () => {
               <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
                 <span className="font-semibold text-rose-700">Explicit Logout Revocation</span>
                 <p className="text-slate-600">
-                  Calling <code className="text-blue-700 font-mono">POST /api/auth/logout</code> records the Bearer token in the <code className="text-slate-800 font-semibold">TokenBlacklistService</code>. Any subsequent request with that token is immediately rejected with 401 Unauthorized.
+                  Calling <code className="text-blue-700 font-mono">POST /api/auth/logout</code> records the Bearer token in the revocation registry. Any subsequent request with that token is immediately rejected with 401 Unauthorized.
                 </p>
               </div>
 
@@ -190,17 +190,17 @@ export const SecurityArchitectureView: React.FC = () => {
         </div>
       )}
 
-      {/* TAB 3: SPRING SECURITY CONFIG */}
+      {/* TAB 3: SECURITY POLICY CONFIG */}
       {activeTab === 'spring' && (
         <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
           <div className="flex items-center justify-between border-b border-slate-100 pb-4">
             <div>
               <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
                 <FileCode className="w-4 h-4 text-blue-600" />
-                Spring Security 6.x / Spring Boot 3 SecurityConfig Specification
+                Enterprise Security Filter Specification
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">
-                Implemented in <code className="font-mono text-blue-700">backend/src/main/java/com/keystone/security/SecurityConfig.java</code>
+                Configured in enterprise security filter pipeline
               </p>
             </div>
           </div>

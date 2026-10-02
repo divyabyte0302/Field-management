@@ -164,16 +164,15 @@ const MainApplication: React.FC = () => {
     }
   };
 
-  // Auto-switch default tab based on logged-in role if on root
+  // Ensure that after login only the dashboard opens
   useEffect(() => {
-    if (window.location.pathname === '/' || window.location.pathname === '') {
-      if (activeRole === 'TECHNICIAN') {
-        handleTabChange('technician-portal');
-      } else if (activeRole === 'CUSTOMER') {
-        handleTabChange('customer-portal');
+    if (isAuthenticated) {
+      if (window.location.pathname === '/' || window.location.pathname === '' || window.location.pathname === '/login') {
+        setActiveTab('dashboard');
+        window.history.pushState(null, '', '/dashboard');
       }
     }
-  }, [activeRole]);
+  }, [isAuthenticated]);
 
   const loadData = async () => {
     if (!isAuthenticated) return;
@@ -322,21 +321,19 @@ const MainApplication: React.FC = () => {
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {activeTab === 'dashboard' && (
-          <RoleGuard allowedRoles={['SUPER_ADMIN', 'ADMIN', 'DISPATCHER']}>
-            <DashboardView
-              stats={stats}
-              workOrders={workOrders}
-              onSelectStage={(stage) => {
-                setSelectedStatusFilter(stage);
-                setActiveTab('work-orders');
-              }}
-              onSelectWorkOrder={(order) => {
-                setSelectedOrder(order);
-                setActiveTab('work-orders');
-              }}
-              onNavigateToTab={(tab) => setActiveTab(tab)}
-            />
-          </RoleGuard>
+          <DashboardView
+            stats={stats}
+            workOrders={workOrders}
+            onSelectStage={(stage) => {
+              setSelectedStatusFilter(stage);
+              setActiveTab('work-orders');
+            }}
+            onSelectWorkOrder={(order) => {
+              setSelectedOrder(order);
+              setActiveTab('work-orders');
+            }}
+            onNavigateToTab={(tab) => setActiveTab(tab)}
+          />
         )}
 
         {activeTab === 'work-orders' && (

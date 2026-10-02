@@ -11,7 +11,6 @@ interface AuthContextType {
   activeRole: RoleName | null;
   sessionExpired: boolean;
   login: (email: string, password: string) => Promise<void>;
-  loginAs: (role: RoleName) => Promise<void>;
   register: (data: {
     email: string;
     password: string;
@@ -156,12 +155,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const loginAs = async (role: RoleName) => {
-    const creds = DEMO_CREDENTIALS[role];
-    if (!creds) throw new Error(`Unknown role ${role}`);
-    await login(creds.email, 'password123');
-  };
-
   const register = async (data: {
     email: string;
     password: string;
@@ -228,7 +221,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         activeRole,
         sessionExpired,
         login,
-        loginAs,
         register,
         logout,
         changePassword,

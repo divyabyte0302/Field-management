@@ -184,7 +184,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <div className="flex items-center space-x-2">
                   <span className="font-bold text-sm tracking-wider text-slate-900 font-mono">KEYSTONE</span>
                   <span className="px-1.5 py-0.5 text-[10px] uppercase font-semibold tracking-wider rounded bg-blue-50 text-blue-700 border border-blue-200">
-                    ENTERPRISE FSM
+                    ENTERPRISE
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500 font-medium">Field Service & Facilities Management</p>
@@ -748,7 +748,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         className="w-full text-left px-2.5 py-2 rounded-lg text-rose-600 hover:bg-rose-50 flex items-center gap-2 transition-colors font-medium"
                       >
                         <LogOut className="w-3.5 h-3.5" />
-                        <span>Sign Out (Revoke JWT)</span>
+                        <span>Sign Out</span>
                       </button>
                     </div>
                   </div>

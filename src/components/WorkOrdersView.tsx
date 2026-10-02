@@ -461,11 +461,11 @@ export const WorkOrdersView: React.FC<WorkOrdersViewProps> = ({
           <div className="flex items-center space-x-2">
             <h1 className="text-xl font-bold text-slate-900 tracking-tight">Work Orders & Lifecycle Operations</h1>
             <span className="px-2 py-0.5 text-[10px] font-mono bg-blue-50 text-blue-700 border border-blue-200 rounded uppercase font-semibold">
-              9-Stage FSM Core
+              Lifecycle Operations
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            Deterministic lifecycle state machine from intake to verification and closure with immutable audit records.
+            Enterprise maintenance lifecycle from intake to verification and closure with immutable audit records.
           </p>
         </div>
 
@@ -965,7 +965,7 @@ export const WorkOrdersView: React.FC<WorkOrdersViewProps> = ({
                   <div className="bg-white p-4.5 rounded-2xl border border-slate-200 shadow-xs">
                     <div className="flex items-center justify-between mb-3">
                       <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                        Work Order FSM Lifecycle Stage
+                        Work Order Lifecycle Stage
                       </span>
                       <span className="px-2 py-0.5 text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 rounded-lg">
                         Current: {selectedOrder.status}
@@ -1006,7 +1006,7 @@ export const WorkOrdersView: React.FC<WorkOrdersViewProps> = ({
                     {/* State Machine Transition Actions */}
                     <div className="mt-4 pt-3 border-t border-slate-100">
                       <div className="text-xs font-semibold text-slate-700 mb-2">
-                        Permitted Next Transitions (Deterministic FSM):
+                        Available Next Transitions:
                       </div>
 
                       {selectedOrder.permittedNextStates && selectedOrder.permittedNextStates.length > 0 ? (

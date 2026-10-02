@@ -106,6 +106,33 @@
       },
       "required": ["id", "organizationId", "sku", "name", "unitCost", "unitPrice", "stockOnHand"]
     },
+    "FacilityInventory": {
+      "title": "FacilityInventory",
+      "description": "Inventory stock levels at specific facilities",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "organizationId": { "type": "string" },
+        "facilityId": { "type": "string" },
+        "partId": { "type": "string" },
+        "stockOnHand": { "type": "number" }
+      },
+      "required": ["id", "organizationId", "facilityId", "partId", "stockOnHand"]
+    },
+    "TimeEntry": {
+      "title": "TimeEntry",
+      "description": "Technician labor time tracking record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "workOrderId": { "type": "string" },
+        "technicianId": { "type": "string" },
+        "durationMinutes": { "type": "number" },
+        "laborCost": { "type": "number" },
+        "notes": { "type": "string" }
+      },
+      "required": ["id", "workOrderId", "technicianId", "durationMinutes"]
+    },
     "ServiceRequest": {
       "title": "ServiceRequest",
       "description": "Inbound customer maintenance ticket",
@@ -164,6 +191,14 @@
     "/parts/{partId}": {
       "schema": "Part",
       "description": "Inventory parts and stock levels"
+    },
+    "/facility_inventory/{invId}": {
+      "schema": "FacilityInventory",
+      "description": "Facility inventory stock per warehouse"
+    },
+    "/time_entries/{timeEntryId}": {
+      "schema": "TimeEntry",
+      "description": "Technician labor time logs"
     },
     "/service_requests/{serviceRequestId}": {
       "schema": "ServiceRequest",

@@ -254,7 +254,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
                 Work Orders by Status
               </h3>
-              <p className="text-[11px] text-slate-500">Breakdown across FSM lifecycle stages</p>
+              <p className="text-[11px] text-slate-500">Breakdown across work order lifecycle stages</p>
             </div>
             <StatusDistributionChart data={stats.charts?.statusDistribution || []} />
           </div>
@@ -298,9 +298,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-sm font-bold text-slate-900">Work Order Lifecycle Pipeline (Deterministic FSM)</h2>
+            <h2 className="text-sm font-bold text-slate-900">Work Order Lifecycle Pipeline</h2>
             <p className="text-xs text-slate-500">
-              Strict deterministic state machine flow. Click any stage to filter work orders.
+              Interactive operational lifecycle flow. Click any stage to filter work orders.
             </p>
           </div>
           <button 

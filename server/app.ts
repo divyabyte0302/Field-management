@@ -26,7 +26,15 @@ import {
   calculateDeadline, matchSlaPolicy, assessWorkOrderSla, calculateFinancialSummary
 } from './slaEngine';
 import { OPENAPI_SPEC, renderSwaggerHtml } from './openapi';
-import { mirrorWorkOrderToFirebase, mirrorAuditLogToFirebase, mirrorServiceRequestToFirebase } from './firebaseStorage';
+import { 
+  mirrorWorkOrderToFirebase, deleteWorkOrderFromFirebase,
+  mirrorCustomerToFirebase, mirrorFacilityToFirebase,
+  mirrorAssetToFirebase, mirrorTechnicianToFirebase,
+  mirrorPartToFirebase, mirrorFacilityInventoryToFirebase,
+  mirrorTimeEntryToFirebase, deleteTimeEntryFromFirebase,
+  mirrorAuditLogToFirebase, mirrorServiceRequestToFirebase,
+  deleteServiceRequestFromFirebase, initializeDualStorageSync
+} from './firebaseStorage';
 
 const PORT = 3000;
 
@@ -43,6 +51,17 @@ let facilityInventory: FacilityInventory[] = [...SEED_FACILITY_INVENTORY];
 let inventoryHistory: InventoryHistory[] = [...SEED_INVENTORY_HISTORY];
 let notifications: AppNotification[] = [...SEED_NOTIFICATIONS];
 let customers: Customer[] = [...SEED_CUSTOMERS];
+
+// Initialize Dual Storage (Primary In-Memory/PostgreSQL Schema + Secondary Firebase Firestore)
+initializeDualStorageSync({
+  customers,
+  facilities,
+  assets,
+  technicians,
+  parts,
+  inventory: facilityInventory,
+  workOrders
+}).catch(() => {});
 
 /**
  * System notification dispatcher
@@ -2128,6 +2147,9 @@ app.use((req, res, next) => {
     order.actualDurationHours = Number((totalMinutes / 60).toFixed(2));
     order.updatedAt = now;
 
+    mirrorWorkOrderToFirebase(order).catch(() => {});
+    mirrorTimeEntryToFirebase(entry).catch(() => {});
+
     const enriched = enrichWorkOrderRecord(order, req.user?.roles);
 
     return res.status(201).json({
@@ -2155,6 +2177,9 @@ app.use((req, res, next) => {
     const totalMinutes = order.timeEntries.reduce((acc, t) => acc + (t.durationMinutes || 0), 0);
     order.actualDurationHours = Number((totalMinutes / 60).toFixed(2));
     order.updatedAt = new Date().toISOString();
+
+    deleteTimeEntryFromFirebase(req.params.entryId).catch(() => {});
+    mirrorWorkOrderToFirebase(order).catch(() => {});
 
     const enriched = enrichWorkOrderRecord(order, req.user?.roles);
 
@@ -2244,6 +2269,10 @@ app.use((req, res, next) => {
     order.parts = order.parts || [];
     order.parts.push(workOrderPart);
     order.updatedAt = now;
+
+    mirrorWorkOrderToFirebase(order).catch(() => {});
+    if (facInv) mirrorFacilityInventoryToFirebase(facInv).catch(() => {});
+    mirrorPartToFirebase(part).catch(() => {});
 
     // Log to inventory history
     const historyEntry: InventoryHistory = {
@@ -2468,6 +2497,9 @@ app.use((req, res, next) => {
     }
 
     part.stockOnHand = Math.max(0, part.stockOnHand + qty);
+
+    if (facInv) mirrorFacilityInventoryToFirebase(facInv).catch(() => {});
+    mirrorPartToFirebase(part).catch(() => {});
 
     const historyEntry: InventoryHistory = {
       id: `invh-${Date.now()}`,
@@ -3209,6 +3241,7 @@ app.use((req, res, next) => {
       state: state || 'NY',
     };
     customers.push(newCustomer);
+    mirrorCustomerToFirebase(newCustomer).catch(() => {});
     return res.status(201).json({
       success: true,
       statusCode: 201,
@@ -3266,6 +3299,7 @@ app.use((req, res, next) => {
       totalAssetsCount: 0,
     };
     facilities.push(newFacility);
+    mirrorFacilityToFirebase(newFacility).catch(() => {});
     return res.status(201).json({
       success: true,
       statusCode: 201,
@@ -3484,6 +3518,7 @@ app.use((req, res, next) => {
     };
 
     serviceRequests.unshift(newSR);
+    mirrorServiceRequestToFirebase(newSR).catch(() => {});
 
     // Notify dispatchers and admins of new inbound customer request
     createNotification({
@@ -3523,6 +3558,8 @@ app.use((req, res, next) => {
     if (description) request.description = description;
     if (locationDetails) request.locationDetails = locationDetails;
 
+    mirrorServiceRequestToFirebase(request).catch(() => {});
+
     return res.json({
       success: true,
       statusCode: 200,
@@ -3550,6 +3587,7 @@ app.use((req, res, next) => {
     }
 
     serviceRequests.splice(idx, 1);
+    deleteServiceRequestFromFirebase(req.params.id).catch(() => {});
 
     return res.json({
       success: true,

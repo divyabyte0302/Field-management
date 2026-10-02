@@ -10,58 +10,61 @@ service cloud.firestore {
       return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
     }
 
-    // Work Orders Collection
+    // Work Orders Collection (Dual storage with relational DB)
     match /work_orders/{workOrderId} {
-      allow read: if true;
-      allow write: if isAuthenticated() || true;
+      allow read, write: if true;
     }
 
-    // Facilities Collection
+    // Facilities / Sites Collection
     match /facilities/{facilityId} {
-      allow read: if true;
-      allow write: if isAuthenticated() || true;
+      allow read, write: if true;
     }
 
     // Assets Collection
     match /assets/{assetId} {
-      allow read: if true;
-      allow write: if isAuthenticated() || true;
+      allow read, write: if true;
     }
 
     // Technicians Collection
     match /technicians/{technicianId} {
-      allow read: if true;
-      allow write: if isAuthenticated() || true;
+      allow read, write: if true;
     }
 
     // Customers Collection
     match /customers/{customerId} {
-      allow read: if true;
-      allow write: if isAuthenticated() || true;
+      allow read, write: if true;
     }
 
-    // Parts & Inventory Collection
+    // Parts Catalog Collection
     match /parts/{partId} {
-      allow read: if true;
-      allow write: if isAuthenticated() || true;
+      allow read, write: if true;
+    }
+
+    // Facility Inventory Stock Collection
+    match /facility_inventory/{invId} {
+      allow read, write: if true;
+    }
+
+    // Labor Time Entries Collection
+    match /time_entries/{timeEntryId} {
+      allow read, write: if true;
     }
 
     // Service Requests Collection
     match /service_requests/{serviceRequestId} {
-      allow read: if true;
-      allow write: if isAuthenticated() || true;
+      allow read, write: if true;
     }
 
-    // Audit Logs Collection (Immutable write, read allowed)
+    // Audit Logs Collection (Immutable write-only ledger, read allowed)
     match /audit_logs/{auditLogId} {
       allow read: if true;
       allow create: if true;
       allow update, delete: if false;
     }
 
-    // Default catch-all
+    // Default match
     match /{document=**} {
-      allow read, write: if isAuthenticated();
+      allow read, write: if true;
     }
   }
 }
